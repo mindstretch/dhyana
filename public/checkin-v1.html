@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dhyana — Check-In</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0E1219;
+    --surface: #141B24;
+    --text-primary: rgba(255,255,255,0.92);
+    --text-secondary: rgba(255,255,255,0.42);
+    --text-dim: rgba(255,255,255,0.22);
+
+    /* State colors */
+    --restful:    #E8A855;   /* warm amber-gold   — top-right  */
+    --activated:  #C96B5A;   /* muted coral        — top-left   */
+    --depleted:   #5A6E8A;   /* cool slate-blue    — bottom-left */
+    --dysreg:     #7A6880;   /* mauve-grey         — bottom-right*/
+    --regulated:  #6FA89A;   /* sage-teal          — center     */
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-primary);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Google Font ────────────────────────────── */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  /* ── Layout ─────────────────────────────────── */
+  .screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+    padding: 56px 24px 48px;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ── Header ─────────────────────────────────── */
+  .header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .wordmark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .prompt {
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--text-primary);
+    text-align: center;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin-top: 4px;
+  }
+
+  .prompt em {
+    font-style: italic;
+    color: rgba(255,255,255,0.72);
+  }
+
+  /* ── Orb Container ───────────────────────────── */
+  .orb-container {
+    position: relative;
+    width: min(320px, 78vw);
+    height: min(320px, 78vw);
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Ambient outer glow — responds to state */
+  .orb-glow {
+    position: absolute;
+    inset: -28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center,
+      rgba(110, 168, 154, 0.10) 0%,
+      transparent 70%
+    );
+    transition: background 0.9s ease;
+    pointer-events: none;
+    filter: blur(18px);
+  }
+
+  /* The main interactive orb */
+  .orb {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: 
+      radial-gradient(ellipse 80% 80% at 70% 28%,  rgba(232,168,85,0.85)  0%, transparent 52%),
+      radial-gradient(ellipse 72% 72% at 24% 26%,  rgba(201,107,90,0.72)  0%, transparent 52%),
+      radial-gradient(ellipse 70% 70% at 22% 76%,  rgba(90,110,138,0.80)  0%, transparent 52%),
+      radial-gradient(ellipse 68% 68% at 76% 78%,  rgba(122,104,128,0.68) 0%, transparent 52%),
+      radial-gradient(circle at 50% 50%,            rgba(111,168,154,0.55) 0%, transparent 60%),
+      radial-gradient(circle at 50% 50%,            #131b26 0%, #0e1219 100%);
+    cursor: crosshair;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.05),
+      0 24px 64px rgba(0,0,0,0.5),
+      0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  /* Soft inner vignette */
+  .orb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(14,18,25,0.55) 100%);
+    pointer-events: none;
+  }
+
+  /* Axis labels — barely there */
+  .axis-labels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .axis-label {
+    position: absolute;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.18);
+    font-weight: 400;
+  }
+  .axis-label.top    { top: 8%;  left: 50%; transform: translateX(-50%); }
+  .axis-label.bottom { bottom: 8%; left: 50%; transform: translateX(-50%); }
+  .axis-label.left   { left: 5%;  top: 50%; transform: translateY(-50%) rotate(-90deg); }
+  .axis-label.right  { right: 5%; top: 50%; transform: translateY(-50%) rotate(90deg); }
+
+  /* Crosshair indicator */
+  .indicator {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(4px);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 0 12px rgba(255,255,255,0.3), 0 0 4px rgba(255,255,255,0.6);
+  }
+  .indicator.visible {
+    opacity: 1;
+  }
+
+  /* Ripple */
+  .ripple {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: none;
+    animation: ripple-out 1.2s ease-out forwards;
+  }
+  @keyframes ripple-out {
+    0%   { transform: translate(-50%, -50%) scale(1);   opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(3.2); opacity: 0; }
+  }
+
+  /* ── State reveal ────────────────────────────── */
+  .state-reveal {
+    height: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: opacity 0.6s ease;
+  }
+
+  .state-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.55s ease, transform 0.55s ease, color 0.6s ease;
+  }
+
+  .state-description {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.55s ease 0.12s, transform 0.55s ease 0.12s;
+    letter-spacing: 0.01em;
+  }
+
+  .state-name.visible,
+  .state-description.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Continue button ─────────────────────────── */
+  .continue-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 16px 0;
+    border-radius: 100px;
+    border: none;
+    background: rgba(255,255,255,0.07);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.5s ease 0.25s, transform 0.5s ease 0.25s, background 0.2s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .continue-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .continue-btn:active {
+    background: rgba(255,255,255,0.13);
+  }
+
+  /* ── Instructions hint ───────────────────────── */
+  .hint {
+    position: absolute;
+    bottom: calc(48px + 72px + 24px + 56px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    white-space: nowrap;
+  }
+
+  .hint.hidden {
+    opacity: 0;
+  }
+
+  /* ── Time ────────────────────────────────────── */
+  .time-display {
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div class="screen">
+
+  <!-- Top: wordmark + prompt -->
+  <div class="header">
+    <span class="wordmark">dhyana</span>
+    <p class="prompt">Where are you<br><em>right now?</em></p>
+  </div>
+
+  <!-- Center: the orb -->
+  <div class="orb-container" id="orbContainer">
+    <div class="orb-glow" id="orbGlow"></div>
+    <div class="orb" id="orb"></div>
+    <div class="axis-labels">
+      <span class="axis-label top">energized</span>
+      <span class="axis-label bottom">depleted</span>
+      <span class="axis-label left">stressed</span>
+      <span class="axis-label right">regulated</span>
+    </div>
+    <div class="indicator" id="indicator"></div>
+  </div>
+
+  <!-- State name / description -->
+  <div class="state-reveal">
+    <div class="state-name" id="stateName"></div>
+    <div class="state-description" id="stateDesc"></div>
+  </div>
+
+  <!-- Continue -->
+  <button class="continue-btn" id="continueBtn">See my protocol →</button>
+
+</div>
+
+<!-- Hint (outside screen flow for absolute positioning) -->
+<div class="hint" id="hint">touch anywhere to place yourself</div>
+
+<!-- Time display -->
+<div class="time-display" id="timeDisplay"></div>
+
+<script>
+// ── State map ────────────────────────────────────────────────────────────────
+// Each state occupies a region. We classify by quadrant + center.
+// Origin: center of orb. X right = regulated. Y up = energized.
+const STATES = {
+  restful:   { name: 'Restful Alertness', desc: 'Calm and clear. Fully present. Ready.',               color: '#E8A855', glow: 'rgba(232,168,85,0.15)'  },
+  regulated: { name: 'Regulated',         desc: 'Steady. Functioning well.',                            color: '#6FA89A', glow: 'rgba(111,168,154,0.12)' },
+  activated: { name: 'Activated',         desc: 'Running hot. Stressed or over-driven.',                color: '#C96B5A', glow: 'rgba(201,107,90,0.14)'  },
+  depleted:  { name: 'Depleted',          desc: 'Running on empty. Heavy. Hard to start.',              color: '#5A6E8A', glow: 'rgba(90,110,138,0.14)'  },
+  dysreg:    { name: 'Dysregulated',      desc: 'Scattered. Mixed signals. System needs a reset.',      color: '#7A6880', glow: 'rgba(122,104,128,0.14)' },
+};
+
+function classifyState(nx, ny) {
+  // nx, ny: normalized -1…+1 from orb center. nx+ = right (regulated), ny+ = up (energized)
+  const dist = Math.sqrt(nx*nx + ny*ny);
+  if (dist < 0.28) return 'regulated'; // center zone
+  if (ny > 0.15 && nx > 0.1)  return 'restful';
+  if (ny > 0.15 && nx < -0.1) return 'activated';
+  if (ny < -0.15 && nx < 0)   return 'depleted';
+  if (ny < -0.15 && nx > 0)   return 'dysreg';
+  // edge zones
+  if (nx > 0.5 && Math.abs(ny) < 0.3)  return 'regulated';
+  if (nx < -0.5 && Math.abs(ny) < 0.3) return 'activated';
+  return 'regulated';
+}
+
+// ── DOM refs ─────────────────────────────────────────────────────────────────
+const orb        = document.getElementById('orb');
+const orbGlow    = document.getElementById('orbGlow');
+const indicator  = document.getElementById('indicator');
+const stateName  = document.getElementById('stateName');
+const stateDesc  = document.getElementById('stateDesc');
+const continueBtn= document.getElementById('continueBtn');
+const hint       = document.getElementById('hint');
+const timeDisp   = document.getElementById('timeDisplay');
+
+// ── Time display ─────────────────────────────────────────────────────────────
+function updateTime() {
+  const now = new Date();
+  const h = now.getHours() % 12 || 12;
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const ap = now.getHours() >= 12 ? 'pm' : 'am';
+  timeDisp.textContent = `${h}:${m} ${ap}`;
+}
+updateTime();
+setInterval(updateTime, 30000);
+
+// ── Orb interaction ──────────────────────────────────────────────────────────
+let hasPlaced = false;
+
+function getOrbCenter() {
+  const r = orb.getBoundingClientRect();
+  return { cx: r.left + r.width/2, cy: r.top + r.height/2, radius: r.width/2 };
+}
+
+function clampToOrb(x, y) {
+  const { cx, cy, radius } = getOrbCenter();
+  const dx = x - cx, dy = y - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  if (dist <= radius) return { x, y, inside: true };
+  const scale = radius / dist;
+  return { x: cx + dx*scale, y: cy + dy*scale, inside: false };
+}
+
+function onPlace(clientX, clientY) {
+  const { cx, cy, radius } = getOrbCenter();
+  const { x, y } = clampToOrb(clientX, clientY);
+
+  const pct_x = (x - (cx - radius)) / (radius * 2); // 0..1 left→right
+  const pct_y = (y - (cy - radius)) / (radius * 2); // 0..1 top→bottom
+
+  // Position indicator
+  indicator.style.left = `${pct_x * 100}%`;
+  indicator.style.top  = `${pct_y * 100}%`;
+  indicator.classList.add('visible');
+
+  // Ripple
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  ripple.style.left = `${pct_x * 100}%`;
+  ripple.style.top  = `${pct_y * 100}%`;
+  orb.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 1300);
+
+  // Classify state — convert to -1..+1, flip Y (screen Y down, model Y up)
+  const nx = (pct_x - 0.5) * 2;
+  const ny = -(pct_y - 0.5) * 2;
+  const key = classifyState(nx, ny);
+  const state = STATES[key];
+
+  // Update glow
+  orbGlow.style.background = `radial-gradient(circle at center, ${state.glow} 0%, transparent 70%)`;
+
+  // Reveal state
+  stateName.style.color = state.color;
+  stateName.textContent = state.name;
+  stateDesc.textContent = state.desc;
+
+  if (!hasPlaced) {
+    hint.classList.add('hidden');
+    hasPlaced = true;
+  }
+
+  // Animate in
+  stateName.classList.remove('visible');
+  stateDesc.classList.remove('visible');
+  continueBtn.classList.remove('visible');
+
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      stateName.classList.add('visible');
+      stateDesc.classList.add('visible');
+      continueBtn.classList.add('visible');
+    }, 60);
+  });
+}
+
+// Touch
+orb.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  onPlace(t.clientX, t.clientY);
+}, { passive: false });
+
+orb.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  onPlace(t.clientX, t.clientY);
+}, { passive: false });
+
+// Mouse (desktop preview)
+let mouseDown = false;
+orb.addEventListener('mousedown', e => { mouseDown = true; onPlace(e.clientX, e.clientY); });
+window.addEventListener('mousemove', e => { if (mouseDown) onPlace(e.clientX, e.clientY); });
+window.addEventListener('mouseup', () => { mouseDown = false; });
+orb.addEventListener('click', e => onPlace(e.clientX, e.clientY));
+
+// Continue
+continueBtn.addEventListener('click', () => {
+  continueBtn.style.opacity = '0.4';
+  setTimeout(() => continueBtn.style.opacity = '', 200);
+  // In production: navigate to protocol screen
+});
+</script>
+</body>
+</html>
