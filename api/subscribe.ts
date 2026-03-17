@@ -1,46 +1,69 @@
-export default async function handler(req, res) {
-  // Only allow POST
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+interface SubscribeBody {
+  email: string;
+  state?: string | null;
+}
+
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<void> {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    res.status(405).json({ error: 'Method not allowed' });
+    return;
   }
 
-  const { email, state } = req.body;
+  const { email, state } = req.body as SubscribeBody;
 
   if (!email || !email.includes('@')) {
-    return res.status(400).json({ error: 'Invalid email' });
+    res.status(400).json({ error: 'Invalid email' });
+    return;
   }
 
-  // 1. Insert into Supabase
-  const sbRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/waitlist`, {
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SECRET_KEY;
+  const resendKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.FROM_EMAIL ?? 'Dhyana <onboarding@resend.dev>';
+
+  if (!supabaseUrl || !supabaseKey || !resendKey) {
+    console.error('Missing required environment variables');
+    res.status(500).json({ error: 'Server configuration error' });
+    return;
+  }
+
+  // 1. Insert into Supabase waitlist table
+  const sbRes = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'apikey': process.env.SUPABASE_SECRET_KEY,
-      'Authorization': `Bearer ${process.env.SUPABASE_SECRET_KEY}`,
-      'Prefer': 'return=minimal'
+      apikey: supabaseKey,
+      Authorization: `Bearer ${supabaseKey}`,
+      Prefer: 'return=minimal',
     },
-    body: JSON.stringify({ email, state: state || null })
+    body: JSON.stringify({ email, state: state ?? null }),
   });
 
   // 409 = duplicate — not an error, just already signed up
   if (!sbRes.ok && sbRes.status !== 409) {
-    const err = await sbRes.text();
-    console.error('Supabase error:', err);
-    return res.status(500).json({ error: 'Failed to save email' });
+    const errText = await sbRes.text();
+    console.error('Supabase error:', errText);
+    res.status(500).json({ error: 'Failed to save email' });
+    return;
   }
 
   const isDuplicate = sbRes.status === 409;
 
-  // 2. Send confirmation via Resend (only for new signups)
+  // 2. Send confirmation via Resend (new signups only)
   if (!isDuplicate) {
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+        Authorization: `Bearer ${resendKey}`,
       },
       body: JSON.stringify({
-        from: process.env.FROM_EMAIL || 'Dhyana <onboarding@resend.dev>',
+        from: fromEmail,
         to: [email],
         subject: "You're on the Dhyana waitlist.",
         html: `
@@ -87,16 +110,16 @@ export default async function handler(req, res) {
             </table>
           </body>
           </html>
-        `
-      })
+        `,
+      }),
     });
 
     if (!resendRes.ok) {
-      const err = await resendRes.text();
-      console.error('Resend error:', err);
-      // Don't fail the request — signup succeeded, email is a bonus
+      const errText = await resendRes.text();
+      console.error('Resend error:', errText);
+      // Don't fail the request — signup succeeded, email is secondary
     }
   }
 
-  return res.status(200).json({ success: true, duplicate: isDuplicate });
+  res.status(200).json({ success: true, duplicate: isDuplicate });
 }
