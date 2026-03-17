@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dhyana</title>
+<meta name="description" content="Dhyana reads your nervous system and tells you exactly what to do about it.">
+<meta property="og:title" content="Dhyana">
+<meta property="og:description" content="Dhyana reads your nervous system and tells you exactly what to do about it.">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:        #0E1219;
+  --text-1:    rgba(255,255,255,0.92);
+  --text-2:    rgba(255,255,255,0.50);
+  --text-3:    rgba(255,255,255,0.24);
+  --restful:   #E8A855;
+  --regulated: #6FA89A;
+  --activated: #C96B5A;
+  --depleted:  #5A6E8A;
+  --dysreg:    #7A6880;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── SCREEN ───────────────────────────────────────── */
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 52px 24px 44px;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ── WORDMARK ─────────────────────────────────────── */
+.wordmark {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  align-self: center;
+}
+
+/* ── ORB ZONE ─────────────────────────────────────── */
+.orb-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+  justify-content: center;
+  width: 100%;
+}
+
+.prompt {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-1);
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin-bottom: 36px;
+  transition: opacity 0.5s ease;
+}
+
+.prompt em {
+  font-style: italic;
+  color: var(--text-2);
+}
+
+/* Orb */
+.orb-container {
+  position: relative;
+  width: min(300px, 74vw);
+  height: min(300px, 74vw);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: visible;
+}
+
+.orb-glow {
+  position: absolute;
+  inset: -32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(111,168,154,0.08) 0%, transparent 70%);
+  filter: blur(20px);
+  transition: background 1.1s ease;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 80% 80% at 70% 28%,  rgba(232,168,85,0.85)  0%, transparent 52%),
+    radial-gradient(ellipse 72% 72% at 24% 26%,  rgba(201,107,90,0.72)  0%, transparent 52%),
+    radial-gradient(ellipse 70% 70% at 22% 76%,  rgba(90,110,138,0.80)  0%, transparent 52%),
+    radial-gradient(ellipse 68% 68% at 76% 78%,  rgba(122,104,128,0.68) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%,            rgba(111,168,154,0.55) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%,            #131b26 0%, #0e1219 100%);
+  cursor: crosshair;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 20px 56px rgba(0,0,0,0.5);
+}
+
+.orb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(14,18,25,0.55) 100%);
+  pointer-events: none;
+}
+
+/* Axis labels — outside the orb, equal breathing room all sides */
+.axis-label {
+  position: absolute;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.36);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.axis-label.top    { top: -26px;   left: 50%; transform: translateX(-50%); }
+.axis-label.bottom { bottom: -26px; left: 50%; transform: translateX(-50%); }
+.axis-label.left   { left: -72px;  top: 50%;  transform: translateY(-50%); text-align: right; }
+.axis-label.right  { right: -78px; top: 50%;  transform: translateY(-50%); }
+
+/* Indicator */
+.indicator {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  box-shadow: 0 0 10px rgba(255,255,255,0.25), 0 0 3px rgba(255,255,255,0.5);
+}
+.indicator.visible { opacity: 1; }
+
+.ripple {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.35);
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: none;
+  animation: ripple-out 1.1s ease-out forwards;
+}
+@keyframes ripple-out {
+  0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.5; }
+  100% { transform: translate(-50%,-50%) scale(3.4); opacity: 0;   }
+}
+
+/* ── STATE REVEAL ─────────────────────────────────── */
+.state-reveal {
+  height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 48px;
+}
+
+.state-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.5s ease, transform 0.5s ease, color 0.5s ease;
+}
+.state-name.visible { opacity: 1; transform: translateY(0); }
+
+.state-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-2);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+}
+.state-desc.visible { opacity: 1; transform: translateY(0); }
+
+/* hint */
+.hint {
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+  margin-top: 16px;
+}
+.hint.hidden { opacity: 0; pointer-events: none; }
+
+/* ── BOTTOM ZONE ──────────────────────────────────── */
+.bottom-zone {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* The line that appears after placement */
+.reveal-line {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.55;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  margin-bottom: 24px;
+  max-width: 320px;
+}
+.reveal-line strong {
+  color: var(--text-1);
+  font-weight: 400;
+}
+.reveal-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Form */
+.form-wrap {
+  width: 100%;
+  max-width: 340px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
+}
+.form-wrap.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.form-row {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 6px 6px 6px 20px;
+  transition: border-color 0.2s;
+}
+.form-row:focus-within {
+  border-color: rgba(232,168,85,0.3);
+}
+
+.form-row input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  min-width: 0;
+}
+.form-row input::placeholder { color: var(--text-3); }
+
+.form-btn {
+  flex-shrink: 0;
+  background: var(--restful);
+  color: #0E1219;
+  border: none;
+  border-radius: 100px;
+  padding: 10px 18px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.form-btn:hover  { opacity: 0.88; }
+.form-btn:active { transform: scale(0.97); }
+
+.form-note {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.02em;
+}
+
+/* Success */
+.form-success {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  animation: fade-up 0.5s ease forwards;
+}
+.success-mark {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--restful);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--restful);
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.success-title {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--text-1);
+}
+.success-sub {
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 300;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FOOTER ───────────────────────────────────────── */
+.footer-line {
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  margin-top: 32px;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- Wordmark -->
+  <div class="wordmark">Dhyana</div>
+
+  <!-- Orb zone -->
+  <div class="orb-zone">
+    <p class="prompt" id="prompt">Where are you<br><em>right now?</em></p>
+
+    <div class="orb-container" id="orbContainer">
+      <div class="orb-glow" id="orbGlow"></div>
+      <div class="orb" id="orb"></div>
+      <div class="indicator" id="indicator"></div>
+      <span class="axis-label top">energized</span>
+      <span class="axis-label bottom">depleted</span>
+      <span class="axis-label left">stressed</span>
+      <span class="axis-label right">regulated</span>
+    </div>
+
+    <!-- State reveal OR hint -->
+    <div class="hint" id="hint">touch to place yourself</div>
+    <div class="state-reveal" id="stateReveal" style="display:none;">
+      <div class="state-name" id="stateName"></div>
+      <div class="state-desc" id="stateDesc"></div>
+    </div>
+  </div>
+
+  <!-- Bottom zone -->
+  <div class="bottom-zone">
+    <p class="reveal-line" id="revealLine">
+      <strong>Dhyana would know exactly what to do next.</strong><br>
+      Be first when it's ready.
+    </p>
+
+    <div class="form-wrap" id="formWrap">
+      <div class="form-row" id="formRow">
+        <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email">
+        <button class="form-btn" id="submitBtn">Join waitlist</button>
+      </div>
+      <p class="form-note">Early access · No spam · Unsubscribe anytime</p>
+      <div class="form-success" id="formSuccess">
+        <div class="success-mark">✓</div>
+        <p class="success-title">You're on the list.</p>
+        <p class="success-sub">We'll find you when it's ready.</p>
+      </div>
+    </div>
+
+    <p class="footer-line">dhyanaflow.com · © 2026</p>
+  </div>
+
+</div>
+
+<script>
+const STATES = {
+  restful:   { name: 'Restful Alertness', desc: 'Calm and clear. Fully present. Ready.',          color: '#E8A855', glow: 'rgba(232,168,85,0.14)'  },
+  regulated: { name: 'Regulated',         desc: 'Steady. Functioning well.',                       color: '#6FA89A', glow: 'rgba(111,168,154,0.11)' },
+  activated: { name: 'Activated',         desc: 'Running hot. Stressed or over-driven.',           color: '#C96B5A', glow: 'rgba(201,107,90,0.13)'  },
+  depleted:  { name: 'Depleted',          desc: 'Running on empty. Heavy. Hard to start.',         color: '#5A6E8A', glow: 'rgba(90,110,138,0.13)'  },
+  dysreg:    { name: 'Dysregulated',      desc: 'Scattered. Mixed signals. Needs a reset.',        color: '#7A6880', glow: 'rgba(122,104,128,0.13)' },
+};
+
+function classify(nx, ny) {
+  const d = Math.sqrt(nx*nx + ny*ny);
+  if (d < 0.28) return 'regulated';
+  if (ny >  0.15 && nx >  0.1)  return 'restful';
+  if (ny >  0.15 && nx < -0.1)  return 'activated';
+  if (ny < -0.15 && nx <  0)    return 'depleted';
+  if (ny < -0.15 && nx >  0)    return 'dysreg';
+  if (nx >  0.5  && Math.abs(ny) < 0.3) return 'regulated';
+  if (nx < -0.5  && Math.abs(ny) < 0.3) return 'activated';
+  return 'regulated';
+}
+
+const orb       = document.getElementById('orb');
+const orbGlow   = document.getElementById('orbGlow');
+const indicator = document.getElementById('indicator');
+const stateName = document.getElementById('stateName');
+const stateDesc = document.getElementById('stateDesc');
+const hint      = document.getElementById('hint');
+const stateReveal = document.getElementById('stateReveal');
+const revealLine  = document.getElementById('revealLine');
+const formWrap    = document.getElementById('formWrap');
+
+let placed = false;
+let currentState = null;
+
+function getCenter() {
+  const r = orb.getBoundingClientRect();
+  return { cx: r.left + r.width/2, cy: r.top + r.height/2, radius: r.width/2 };
+}
+
+function onPlace(clientX, clientY) {
+  const { cx, cy, radius } = getCenter();
+  const dx = clientX - cx, dy = clientY - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  let x = clientX, y = clientY;
+  if (dist > radius) {
+    x = cx + (dx/dist)*radius;
+    y = cy + (dy/dist)*radius;
+  }
+
+  const r = orb.getBoundingClientRect();
+  const px = (x - r.left) / r.width;
+  const py = (y - r.top)  / r.height;
+
+  indicator.style.left = `${px*100}%`;
+  indicator.style.top  = `${py*100}%`;
+  indicator.classList.add('visible');
+
+  // ripple
+  const rip = document.createElement('div');
+  rip.className = 'ripple';
+  rip.style.left = `${px*100}%`;
+  rip.style.top  = `${py*100}%`;
+  orb.appendChild(rip);
+  setTimeout(() => rip.remove(), 1200);
+
+  const nx = (px - 0.5) * 2;
+  const ny = -(py - 0.5) * 2;
+  const key = classify(nx, ny);
+  currentState = key;
+  const state = STATES[key];
+
+  orbGlow.style.background = `radial-gradient(circle at center, ${state.glow} 0%, transparent 70%)`;
+
+  stateName.style.color = state.color;
+  stateName.textContent = state.name;
+  stateDesc.textContent = state.desc;
+
+  if (!placed) {
+    placed = true;
+
+    // swap hint → state reveal
+    hint.classList.add('hidden');
+    setTimeout(() => {
+      hint.style.display = 'none';
+      stateReveal.style.display = 'flex';
+      setTimeout(() => {
+        stateName.classList.add('visible');
+        stateDesc.classList.add('visible');
+      }, 40);
+    }, 400);
+
+    // reveal bottom
+    setTimeout(() => {
+      revealLine.classList.add('visible');
+      formWrap.classList.add('visible');
+    }, 700);
+
+  } else {
+    stateName.classList.remove('visible');
+    stateDesc.classList.remove('visible');
+    requestAnimationFrame(() => setTimeout(() => {
+      stateName.classList.add('visible');
+      stateDesc.classList.add('visible');
+    }, 40));
+  }
+}
+
+// Touch
+orb.addEventListener('touchstart', e => { e.preventDefault(); const t=e.touches[0]; onPlace(t.clientX,t.clientY); }, {passive:false});
+orb.addEventListener('touchmove',  e => { e.preventDefault(); const t=e.touches[0]; onPlace(t.clientX,t.clientY); }, {passive:false});
+
+// Mouse
+let md = false;
+orb.addEventListener('mousedown', e => { md=true; onPlace(e.clientX,e.clientY); });
+window.addEventListener('mousemove', e => { if(md) onPlace(e.clientX,e.clientY); });
+window.addEventListener('mouseup', () => { md=false; });
+orb.addEventListener('click', e => onPlace(e.clientX,e.clientY));
+
+// Form
+document.getElementById('submitBtn').addEventListener('click', submit);
+document.getElementById('emailInput').addEventListener('keydown', e => { if(e.key==='Enter') submit(); });
+
+async function submit() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('emailInput').focus();
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, state: currentState })
+    });
+  } catch(err) {
+    console.error(err);
+  }
+
+  // Show success regardless — never block the user
+  document.getElementById('formRow').style.display = 'none';
+  document.querySelector('.form-note').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'flex';
+}
+</script>
+</body>
+</html>
