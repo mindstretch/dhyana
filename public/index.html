@@ -936,17 +936,29 @@ window.addEventListener('touchmove',  e => { if (dragging) setVolume(getVolumeFr
 window.addEventListener('mouseup',  () => { dragging = false; });
 window.addEventListener('touchend', () => { dragging = false; });
 
-/* Start at 10% — unmuted, slider shown at correct position */
+/* Init slider at 10% but stay muted — browser blocks autoplay with sound.
+   On first user interaction anywhere on the page, softly unmute and play. */
 setVolume(0.10);
-iconMuted.style.display   = 'none';
-iconUnmuted.style.display = 'block';
-audio.play().catch(() => {
-  /* Autoplay blocked (common on mobile) — fall back to muted state */
-  isMuted = true;
-  audio.muted = true;
-  iconMuted.style.display   = 'block';
-  iconUnmuted.style.display = 'none';
-});
+isMuted = true;
+audio.muted = true;
+iconMuted.style.display   = 'block';
+iconUnmuted.style.display = 'none';
+
+let autoplayUnlocked = false;
+function unlockAutoplay() {
+  if (autoplayUnlocked) return;
+  autoplayUnlocked = true;
+  isMuted = false;
+  audio.muted = false;
+  audio.volume = volume;
+  iconMuted.style.display   = 'none';
+  iconUnmuted.style.display = 'block';
+  audio.play().catch(() => {});
+  document.removeEventListener('click',     unlockAutoplay);
+  document.removeEventListener('touchstart', unlockAutoplay);
+}
+document.addEventListener('click',      unlockAutoplay, { once: true });
+document.addEventListener('touchstart', unlockAutoplay, { once: true });
 
 async function submit() {
   const email = document.getElementById('emailInput').value.trim();
