@@ -90,20 +90,41 @@ module.exports = async (req, res) => {
 
   const isDuplicate = sbRes.status === 409;
 
-  // 2. Send confirmation email
+  // 2. Send confirmation email + internal notification
   if (!isDuplicate) {
     const { subject, html } = buildEmail(state);
+
+    // Confirmation to user
     const resendRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${resendKey}`,
-      },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendKey}` },
       body: JSON.stringify({ from: fromEmail, to: [email], subject, html }),
     });
     if (!resendRes.ok) {
       console.error('Resend error:', await resendRes.text());
     }
+
+    // Internal notification to hello@dhyanaflow.com
+    const stateLabel = STATE_MAP[state] ? state.charAt(0).toUpperCase() + state.slice(1) : 'Unknown';
+    const notifHtml = `<div style="font-family:Helvetica,sans-serif;padding:32px;background:#0E1219;color:rgba(255,255,255,0.8);">
+      <p style="font-family:Georgia,serif;font-style:italic;font-size:18px;color:rgba(255,255,255,0.5);margin:0 0 24px;">Dhyana</p>
+      <div style="width:32px;height:1.5px;background:${STATE_MAP[state]?.color || '#E8A855'};margin-bottom:24px;"></div>
+      <p style="font-size:20px;font-weight:400;margin:0 0 16px;color:rgba(255,255,255,0.92);">New waitlist signup</p>
+      <p style="font-size:15px;margin:0 0 8px;color:rgba(255,255,255,0.6);"><strong style="color:rgba(255,255,255,0.88);">Email:</strong> ${email}</p>
+      <p style="font-size:15px;margin:0 0 8px;color:rgba(255,255,255,0.6);"><strong style="color:rgba(255,255,255,0.88);">State:</strong> ${stateLabel}</p>
+      <p style="font-size:15px;margin:0;color:rgba(255,255,255,0.6);"><strong style="color:rgba(255,255,255,0.88);">Time:</strong> ${new Date().toUTCString()}</p>
+    </div>`;
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendKey}` },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: ['hello@dhyanaflow.com'],
+        subject: `New signup — ${email} (${stateLabel})`,
+        html: notifHtml,
+      }),
+    });
   }
 
   return res.status(200).json({ success: true, duplicate: isDuplicate });
