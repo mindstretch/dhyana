@@ -868,11 +868,11 @@ const iconMuted   = document.getElementById('iconMuted');
 const iconUnmuted = document.getElementById('iconUnmuted');
 const volumeIcon  = document.getElementById('volumeIcon');
 
-let isMuted = true;
-let volume  = 0.45;
+let isMuted = false;
+let volume  = 0.10;
 
-audio.volume = 0;
-audio.muted  = true;
+audio.volume = 0.10;
+audio.muted  = false;
 
 function setVolume(v) {
   volume = Math.max(0, Math.min(1, v));
@@ -918,7 +918,17 @@ window.addEventListener('touchmove',  e => { if (dragging) setVolume(getVolumeFr
 window.addEventListener('mouseup',  () => { dragging = false; });
 window.addEventListener('touchend', () => { dragging = false; });
 
-setVolume(0);
+/* Start at 10% — unmuted, slider shown at correct position */
+setVolume(0.10);
+iconMuted.style.display   = 'none';
+iconUnmuted.style.display = 'block';
+audio.play().catch(() => {
+  /* Autoplay blocked (common on mobile) — fall back to muted state */
+  isMuted = true;
+  audio.muted = true;
+  iconMuted.style.display   = 'block';
+  iconUnmuted.style.display = 'none';
+});
 
 async function submit() {
   const email = document.getElementById('emailInput').value.trim();
