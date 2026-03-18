@@ -1,11 +1,11 @@
 {
   "version": 2,
   "builds": [
-    { "src": "src/app/api/subscribe/route.ts", "use": "@vercel/node" },
+    { "src": "api/subscribe.js", "use": "@vercel/node" },
     { "src": "public/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/subscribe", "dest": "/src/app/api/subscribe/route.ts" },
+    { "src": "/api/subscribe", "dest": "/api/subscribe.js" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
