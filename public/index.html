@@ -75,8 +75,8 @@ html, body {
 /* ── ORB CONTAINER ───────────────────────────────── */
 .orb-container {
   position: relative;
-  width: min(300px, 58vw);
-  height: min(300px, 58vw);
+  width: min(300px, 62vw);
+  height: min(300px, 62vw);
   flex-shrink: 0;
   user-select: none;
   -webkit-user-select: none;
@@ -175,6 +175,11 @@ html, body {
 .axis-label.bottom { bottom: -26px; left: 50%; transform: translateX(-50%); }
 .axis-label.left   { left: -68px;  top: 50%;  transform: translateY(-50%); text-align: right; }
 .axis-label.right  { right: -68px; top: 50%;  transform: translateY(-50%); }
+
+@media (max-width: 480px) {
+  .axis-label.left  { left: 10px;  text-align: left; }
+  .axis-label.right { right: 10px; }
+}
 
 /* Indicator — the drop landing in water */
 .indicator {
