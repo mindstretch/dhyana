@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Dhyana — Where are you right now?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
@@ -17,14 +17,22 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
   height: 100%;
+  height: -webkit-fill-available;
+}
+
+body {
+  min-height: 100%;
+  min-height: -webkit-fill-available;
   background: var(--bg);
   color: var(--text-1);
   font-family: 'DM Sans', sans-serif;
   overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Orb needs full touch control — override body pan-y */
@@ -32,21 +40,57 @@ html, body {
   touch-action: none;
 }
 
+/* ── PORTRAIT (mobile-first) ────────────────────────── */
 .screen {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 48px 40px;
+  /* safe area insets for notched phones */
+  padding: 24px max(20px, env(safe-area-inset-left)) max(24px, env(safe-area-inset-bottom));
+  padding-top: max(24px, env(safe-area-inset-top));
   gap: 0;
 }
 
-@media (max-height: 500px) {
-  .screen { padding: 12px 48px 16px; }
-  .wordmark { margin-bottom: 10px; }
-  .prompt { font-size: 16px; margin-bottom: 16px; }
-  .state-reveal { margin-top: 16px; height: 48px; }
-  .hint { height: 36px; }
+/* ── LANDSCAPE — side-by-side layout ────────────────── */
+@media (orientation: landscape) and (max-height: 600px) {
+  .screen {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: max(12px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+    min-height: 100dvh;
+    overflow-y: auto;
+  }
+
+  .wordmark { display: none; }
+
+  .orb-zone {
+    flex: 0 0 auto;
+    width: auto;
+    gap: 8px;
+  }
+
+  .bottom-zone {
+    flex: 1;
+    max-width: 300px;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .reveal-line { text-align: left; }
+  .form-note   { text-align: left; }
+  .footer-line { text-align: left; }
+
+  .prompt {
+    font-size: 15px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .state-reveal { margin-top: 8px; }
+  .hint { height: 32px; font-size: 11px; margin-top: 4px; }
 }
 
 .wordmark {
@@ -56,7 +100,8 @@ html, body {
   color: var(--text-2);
   letter-spacing: 0.02em;
   align-self: center;
-  margin-bottom: 28px;
+  margin-bottom: 20px;
+  flex-shrink: 0;
 }
 
 /* ── ORB ZONE ─────────────────────────────────────── */
@@ -77,8 +122,9 @@ html, body {
   text-align: center;
   line-height: 1.4;
   letter-spacing: -0.01em;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   transition: opacity 0.5s ease;
+  flex-shrink: 0;
 }
 .prompt em {
   font-style: italic;
@@ -86,14 +132,31 @@ html, body {
 }
 
 /* ── ORB CONTAINER ───────────────────────────────── */
+/*
+  Sizing strategy (mobile-first):
+  - Portrait phone: bound by viewport width (leave ~20% padding each side) and height
+  - On very tall phones the height constraint kicks in to leave room for the form
+  - Desktop: capped at 300px
+*/
 .orb-container {
   position: relative;
-  width: min(300px, 62vw, 42vh);
-  height: min(300px, 62vw, 42vh);
+  --orb-size: min(260px, 58vw, 44vh);
+  width: var(--orb-size);
+  height: var(--orb-size);
+  /* Extra breathing room for axis labels — they now live INSIDE */
   flex-shrink: 0;
   user-select: none;
   -webkit-user-select: none;
   overflow: visible;
+}
+
+/* Desktop: restore the original feel */
+@media (min-width: 768px) {
+  .orb-container {
+    --orb-size: min(300px, 40vw, 42vh);
+  }
+  .prompt { margin-bottom: 36px; }
+  .wordmark { margin-bottom: 28px; }
 }
 
 /* Ambient outer glow — breathes slowly */
@@ -174,24 +237,55 @@ html, body {
   overflow: hidden;
 }
 
-/* Axis labels */
+/* ── AXIS LABELS ─────────────────────────────────── */
+/*
+  Elegant solution: labels live just inside the orb edge at all sizes.
+  No overflow. No clipping. No breakpoint hacks.
+  Inset from the orb edge by ~12px so they're readable but don't
+  obscure the center interaction zone.
+*/
 .axis-label {
   position: absolute;
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: 9px;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.36);
+  color: rgba(255,255,255,0.32);
   pointer-events: none;
   white-space: nowrap;
+  z-index: 2;
 }
-.axis-label.top    { top: -26px;   left: 50%; transform: translateX(-50%); }
-.axis-label.bottom { bottom: -26px; left: 50%; transform: translateX(-50%); }
-.axis-label.left   { left: -68px;  top: 50%;  transform: translateY(-50%); text-align: right; }
-.axis-label.right  { right: -68px; top: 50%;  transform: translateY(-50%); }
+/* Top/bottom: inside top/bottom edge, horizontally centered */
+.axis-label.top    {
+  top: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.axis-label.bottom {
+  bottom: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+/* Left/right: inside left/right edge, vertically centered */
+.axis-label.left   {
+  left: 9%;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: left;
+}
+.axis-label.right  {
+  right: 9%;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+}
 
-@media (max-width: 480px) {
-  .axis-label.left  { left: 10px;  text-align: left; }
-  .axis-label.right { right: 10px; }
+/* Desktop: labels can live outside the orb — more breathing room */
+@media (min-width: 768px) {
+  .axis-label { font-size: 10px; letter-spacing: 0.14em; color: rgba(255,255,255,0.36); }
+  .axis-label.top    { top: -26px;    left: 50%; transform: translateX(-50%); }
+  .axis-label.bottom { bottom: -26px; left: 50%; transform: translateX(-50%); }
+  .axis-label.left   { left: -68px;   top: 50%;  transform: translateY(-50%); text-align: right; }
+  .axis-label.right  { right: -68px;  top: 50%;  transform: translateY(-50%); }
 }
 
 /* Indicator — the drop landing in water */
@@ -215,13 +309,17 @@ html, body {
 
 /* ── STATE REVEAL ─────────────────────────────────── */
 .state-reveal {
-  height: 64px;
+  height: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 3px;
-  margin-top: 48px;
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .state-reveal { height: 64px; margin-top: 48px; }
 }
 
 .state-name {
@@ -250,14 +348,19 @@ html, body {
   font-size: 12px;
   color: var(--text-3);
   letter-spacing: 0.04em;
-  height: 64px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: opacity 0.4s ease;
-  margin-top: 16px;
+  margin-top: 8px;
+  flex-shrink: 0;
 }
 .hint.hidden { opacity: 0; pointer-events: none; }
+
+@media (min-width: 768px) {
+  .hint { height: 64px; margin-top: 16px; }
+}
 
 /* ── BOTTOM ZONE ──────────────────────────────────── */
 .bottom-zone {
@@ -266,10 +369,11 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 0;
+  flex-shrink: 0;
 }
 
 .reveal-line {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 300;
   color: var(--text-2);
   text-align: center;
@@ -277,11 +381,15 @@ html, body {
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.6s ease, transform 0.6s ease;
-  margin-bottom: 24px;
-  max-width: 320px;
+  margin-bottom: 16px;
+  max-width: 300px;
 }
 .reveal-line strong { color: var(--text-1); font-weight: 400; }
 .reveal-line.visible { opacity: 1; transform: translateY(0); }
+
+@media (min-width: 768px) {
+  .reveal-line { font-size: 15px; margin-bottom: 24px; max-width: 320px; }
+}
 
 .form-wrap {
   width: 100%;
@@ -380,8 +488,12 @@ html, body {
   font-size: 11px;
   color: var(--text-3);
   letter-spacing: 0.04em;
-  margin-top: 32px;
+  margin-top: 20px;
   text-align: center;
+}
+
+@media (min-width: 768px) {
+  .footer-line { margin-top: 32px; }
 }
 </style>
 </head>
