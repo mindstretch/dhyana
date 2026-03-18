@@ -253,11 +253,19 @@ body {
 
 /* ── AXIS LABELS ─────────────────────────────────── */
 /*
-  Elegant solution: labels live just inside the orb edge at all sizes.
-  No overflow. No clipping. No breakpoint hacks.
-  Inset from the orb edge by ~12px so they're readable but don't
-  obscure the center interaction zone.
+  Strategy: labels are positioned relative to .orb-container.
+  Mobile: inside the orb at consistent percentage insets.
+  Desktop: outside the orb using a uniform --label-gap so all
+  four sides have identical clearance regardless of orb size.
+
+  --label-gap = distance from the orb edge to the near edge of the label text.
+  We achieve this by placing labels at exactly -var(--label-gap) from
+  the container edge (which equals the orb edge since overflow:visible).
 */
+:root {
+  --label-gap: 14px; /* equal clearance on all four sides, desktop */
+}
+
 .axis-label {
   position: absolute;
   font-size: 9px;
@@ -268,38 +276,48 @@ body {
   white-space: nowrap;
   z-index: 2;
 }
-/* Top/bottom: inside top/bottom edge, horizontally centered */
-.axis-label.top    {
-  top: 14%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.axis-label.bottom {
-  bottom: 14%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-/* Left/right: inside left/right edge, vertically centered */
-.axis-label.left   {
-  left: 9%;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: left;
-}
-.axis-label.right  {
-  right: 9%;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: right;
-}
 
-/* Desktop: labels can live outside the orb — more breathing room */
+/* Mobile: inside the orb at consistent percentage insets */
+.axis-label.top    { top: 13%;  left: 50%; transform: translateX(-50%); }
+.axis-label.bottom { bottom: 13%; left: 50%; transform: translateX(-50%); }
+.axis-label.left   { left: 8%;  top: 50%;  transform: translateY(-50%); }
+.axis-label.right  { right: 8%; top: 50%;  transform: translateY(-50%); }
+
+/* Desktop: outside the orb, equal gap on all four sides */
 @media (min-width: 768px) {
-  .axis-label { font-size: 10px; letter-spacing: 0.14em; color: rgba(255,255,255,0.36); }
-  .axis-label.top    { top: -26px;    left: 50%; transform: translateX(-50%); }
-  .axis-label.bottom { bottom: -26px; left: 50%; transform: translateX(-50%); }
-  .axis-label.left   { left: -68px;   top: 50%;  transform: translateY(-50%); text-align: right; }
-  .axis-label.right  { right: -68px;  top: 50%;  transform: translateY(-50%); }
+  .axis-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.36);
+  }
+  /* Top/bottom: positioned above/below the container, centered */
+  .axis-label.top {
+    top: auto;
+    bottom: calc(100% + var(--label-gap));
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .axis-label.bottom {
+    bottom: auto;
+    top: calc(100% + var(--label-gap));
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  /* Left/right: positioned outside the container, vertically centered */
+  .axis-label.left {
+    left: auto;
+    right: calc(100% + var(--label-gap));
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: right;
+  }
+  .axis-label.right {
+    right: auto;
+    left: calc(100% + var(--label-gap));
+    top: 50%;
+    transform: translateY(-50%);
+    text-align: left;
+  }
 }
 
 /* Indicator — the drop landing in water */
