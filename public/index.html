@@ -46,10 +46,19 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between; /* wordmark top, form bottom, orb fills middle */
   /* safe area insets for notched phones */
-  padding: 24px max(20px, env(safe-area-inset-left)) max(24px, env(safe-area-inset-bottom));
+  padding: 24px 20px max(24px, env(safe-area-inset-bottom)) 20px;
   padding-top: max(24px, env(safe-area-inset-top));
   gap: 0;
+}
+
+/* Desktop: restore flex centering */
+@media (min-width: 768px) {
+  .screen {
+    justify-content: flex-start;
+    padding: 28px 48px 40px;
+  }
 }
 
 /* ── LANDSCAPE — side-by-side layout ────────────────── */
@@ -110,9 +119,21 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0;
-  flex: 1;
+  /* Mobile: don't flex-grow — let the layout pack top-to-bottom
+     so the bottom-zone (form) is always visible without scrolling */
+  flex: 0 0 auto;
   justify-content: center;
   width: 100%;
+  /* Push orb zone content to center but only take needed space */
+  padding: 8px 0 0;
+}
+
+/* Desktop: orb zone can expand to fill available space */
+@media (min-width: 768px) {
+  .orb-zone {
+    flex: 1;
+    padding: 0;
+  }
 }
 
 .prompt {
@@ -370,6 +391,11 @@ body {
   align-items: center;
   gap: 0;
   flex-shrink: 0;
+  padding-top: 12px;
+}
+
+@media (min-width: 768px) {
+  .bottom-zone { padding-top: 0; }
 }
 
 .reveal-line {
