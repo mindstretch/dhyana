@@ -27,6 +27,11 @@ html, body {
   touch-action: pan-y;
 }
 
+/* Orb needs full touch control — override body pan-y */
+.orb-container {
+  touch-action: none;
+}
+
 .screen {
   min-height: 100dvh;
   display: flex;
@@ -34,6 +39,14 @@ html, body {
   align-items: center;
   padding: 28px 48px 40px;
   gap: 0;
+}
+
+@media (max-height: 500px) {
+  .screen { padding: 12px 48px 16px; }
+  .wordmark { margin-bottom: 10px; }
+  .prompt { font-size: 16px; margin-bottom: 16px; }
+  .state-reveal { margin-top: 16px; height: 48px; }
+  .hint { height: 36px; }
 }
 
 .wordmark {
@@ -75,8 +88,8 @@ html, body {
 /* ── ORB CONTAINER ───────────────────────────────── */
 .orb-container {
   position: relative;
-  width: min(300px, 62vw);
-  height: min(300px, 62vw);
+  width: min(300px, 62vw, 42vh);
+  height: min(300px, 62vw, 42vh);
   flex-shrink: 0;
   user-select: none;
   -webkit-user-select: none;
