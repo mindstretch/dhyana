@@ -22,8 +22,9 @@ html, body {
   background: var(--bg);
   color: var(--text-1);
   font-family: 'DM Sans', sans-serif;
-  overflow: hidden;
-  touch-action: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  touch-action: pan-y;
 }
 
 .screen {
@@ -31,7 +32,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 28px 24px 24px;
+  padding: 28px 48px 40px;
   gap: 0;
 }
 
@@ -172,8 +173,8 @@ html, body {
 }
 .axis-label.top    { top: -26px;   left: 50%; transform: translateX(-50%); }
 .axis-label.bottom { bottom: -26px; left: 50%; transform: translateX(-50%); }
-.axis-label.left   { left: -72px;  top: 50%;  transform: translateY(-50%); text-align: right; }
-.axis-label.right  { right: -78px; top: 50%;  transform: translateY(-50%); }
+.axis-label.left   { left: -68px;  top: 50%;  transform: translateY(-50%); text-align: right; }
+.axis-label.right  { right: -68px; top: 50%;  transform: translateY(-50%); }
 
 /* Indicator — the drop landing in water */
 .indicator {
