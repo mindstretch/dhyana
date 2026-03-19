@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhyana — Style Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── TOKENS ────────────────────────────────────────── */
+:root {
+  --bg:           #0E1219;
+  --bg-raised:    rgba(255,255,255,0.03);
+  --bg-elevated:  rgba(255,255,255,0.055);
+  --border:       rgba(255,255,255,0.08);
+  --text-1:       rgba(255,255,255,0.88);
+  --text-2:       rgba(255,255,255,0.52);
+  --text-3:       rgba(255,255,255,0.28);
+  --text-4:       rgba(255,255,255,0.14);
+
+  /* State colors */
+  --restful:      #E8A855;
+  --regulated:    #6FA89A;
+  --activated:    #C96B5A;
+  --depleted:     #5A6E8A;
+  --dysreg:       #7A6880;
+
+  --sidebar-w: 220px;
+  --content-max: 800px;
+}
+
+/* ── BASE ──────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ────────────────────────────────────────── */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ───────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 40px 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sidebar-wordmark {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--text-2);
+  padding: 0 28px 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.sidebar-section-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  padding: 0 28px 10px;
+  margin-top: 20px;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 7px 28px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.sidebar-link:hover { color: var(--text-1); }
+.sidebar-link.active { color: var(--text-1); }
+
+/* ── MAIN ──────────────────────────────────────────── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 80px 64px 120px;
+}
+
+.content {
+  max-width: var(--content-max);
+}
+
+/* ── SECTION ───────────────────────────────────────── */
+.section {
+  margin-bottom: 96px;
+}
+
+.section-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--text-1);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.section-desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.7;
+  max-width: 540px;
+  margin-bottom: 48px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 48px 0;
+}
+
+/* ── SPEC BLOCK ────────────────────────────────────── */
+.spec {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.spec-preview {
+  padding: 48px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border);
+  min-height: 120px;
+}
+
+.spec-meta {
+  padding: 16px 20px;
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.spec-key {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+
+.spec-val {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-2);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ── COLOR GRID ────────────────────────────────────── */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.color-swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.swatch-block {
+  height: 80px;
+}
+
+.swatch-info {
+  background: var(--bg-raised);
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.swatch-name {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-1);
+  margin-bottom: 3px;
+}
+
+.swatch-hex {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.04em;
+}
+
+.swatch-desc {
+  font-size: 10px;
+  color: var(--text-4);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── UI COLORS ─────────────────────────────────────── */
+.ui-color-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ui-color-row:last-child { border-bottom: none; }
+
+.ui-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+.ui-color-info { flex: 1; }
+.ui-color-name {
+  font-size: 13px;
+  color: var(--text-1);
+  margin-bottom: 2px;
+}
+.ui-color-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.ui-color-use {
+  font-size: 11px;
+  color: var(--text-3);
+  max-width: 240px;
+  text-align: right;
+  line-height: 1.5;
+}
+
+/* ── TYPE SPECIMENS ────────────────────────────────── */
+.type-specimen {
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  gap: 40px;
+}
+.type-specimen:last-child { border-bottom: none; }
+
+.type-example { flex: 1; }
+.type-specs {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.type-spec-row {
+  display: flex;
+  justify-content: space-between;
+}
+.type-spec-label {
+  font-size: 10px;
+  color: var(--text-4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.type-spec-val {
+  font-size: 10px;
+  color: var(--text-2);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+/* ── SPACING ───────────────────────────────────────── */
+.spacing-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.spacing-row:last-child { border-bottom: none; }
+
+.spacing-bar-wrap {
+  width: 200px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+.spacing-bar {
+  height: 6px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 3px;
+}
+.spacing-label {
+  font-size: 12px;
+  color: var(--text-2);
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  width: 48px;
+}
+.spacing-use {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+/* ── MOTION TABLE ──────────────────────────────────── */
+.motion-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.motion-row:last-child { border-bottom: none; }
+.motion-name { font-size: 13px; color: var(--text-1); width: 200px; flex-shrink: 0; }
+.motion-val  { font-size: 12px; color: var(--text-2); font-family: 'SF Mono','Fira Code',monospace; flex: 1; }
+.motion-use  { font-size: 12px; color: var(--text-3); width: 220px; text-align: right; }
+
+/* ── COMPONENT: BUTTON ─────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  border: none;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn:hover  { opacity: 0.85; }
+
+.btn-primary {
+  background: #E8A855;
+  color: #0E1219;
+  font-size: 14px;
+  padding: 12px 24px;
+}
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 14px;
+  padding: 12px 24px;
+}
+.btn-ghost {
+  background: transparent;
+  color: rgba(255,255,255,0.44);
+  font-size: 13px;
+  padding: 10px 16px;
+}
+.btn-sm {
+  font-size: 12px;
+  padding: 8px 16px;
+}
+
+/* ── COMPONENT: INPUT ──────────────────────────────── */
+.input-wrap {
+  display: flex;
+  width: 100%;
+  max-width: 360px;
+  gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 6px 6px 6px 20px;
+  transition: border-color 0.2s;
+}
+.input-wrap:focus-within { border-color: rgba(232,168,85,0.3); }
+.input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  min-width: 0;
+}
+.input-wrap input::placeholder { color: var(--text-3); }
+
+/* ── COMPONENT: STATE PILL ─────────────────────────── */
+.state-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px 6px 10px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-1);
+}
+.state-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── COMPONENT: FORM ROW ───────────────────────────── */
+.form-note-text {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.02em;
+}
+
+/* ── COMPONENT: DIVIDER LINE ───────────────────────── */
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.rule-line {
+  height: 1px;
+  background: var(--border);
+  flex: 1;
+}
+.rule-accent {
+  height: 1.5px;
+  width: 32px;
+  border-radius: 1px;
+}
+
+/* ── ORBS ──────────────────────────────────────────── */
+.orb-demo {
+  position: relative;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 80% 80% at 70% 28%,  rgba(232,168,85,0.85)  0%, transparent 52%),
+    radial-gradient(ellipse 72% 72% at 24% 26%,  rgba(201,107,90,0.72)  0%, transparent 52%),
+    radial-gradient(ellipse 70% 70% at 22% 76%,  rgba(90,110,138,0.80)  0%, transparent 52%),
+    radial-gradient(ellipse 68% 68% at 76% 78%,  rgba(122,104,128,0.68) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%,            rgba(111,168,154,0.55) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%,            #131b26 0%, #0e1219 100%);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 20px 56px rgba(0,0,0,0.5);
+  animation: orb-breathe 7s ease-in-out infinite;
+}
+@keyframes orb-breathe {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.022); }
+}
+
+/* ── VOICE EXAMPLES ────────────────────────────────── */
+.voice-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.voice-surface {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 10px;
+}
+.voice-yes {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-1);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.voice-no {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-3);
+  line-height: 1.6;
+  text-decoration: line-through;
+  text-decoration-color: rgba(255,255,255,0.15);
+}
+.voice-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 4px;
+}
+
+/* ── DO/DONT ───────────────────────────────────────── */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.do-card, .dont-card {
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid var(--border);
+}
+.do-card { background: rgba(111,168,154,0.04); border-color: rgba(111,168,154,0.15); }
+.dont-card { background: rgba(201,107,90,0.04); border-color: rgba(201,107,90,0.12); }
+.do-label  { font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #6FA89A; margin-bottom: 10px; }
+.dont-label{ font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #C96B5A; margin-bottom: 10px; }
+.do-text, .dont-text { font-size: 13px; font-weight: 300; color: var(--text-2); line-height: 1.6; }
+
+/* ── FOOTER ────────────────────────────────────────── */
+.guide-footer {
+  margin-top: 96px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+.guide-footer p {
+  font-size: 11px;
+  color: var(--text-4);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ── SIDEBAR ────────────────────────────────────── -->
+<nav class="sidebar">
+  <div class="sidebar-wordmark">Dhyana</div>
+
+  <span class="sidebar-section-label">Foundation</span>
+  <a class="sidebar-link" href="#philosophy">Philosophy</a>
+  <a class="sidebar-link" href="#voice">Voice & Tone</a>
+
+  <span class="sidebar-section-label">Visual</span>
+  <a class="sidebar-link" href="#color">Color</a>
+  <a class="sidebar-link" href="#typography">Typography</a>
+  <a class="sidebar-link" href="#spacing">Spacing</a>
+  <a class="sidebar-link" href="#motion">Motion</a>
+  <a class="sidebar-link" href="#orb">The Orb</a>
+
+  <span class="sidebar-section-label">Components</span>
+  <a class="sidebar-link" href="#buttons">Buttons</a>
+  <a class="sidebar-link" href="#inputs">Inputs</a>
+  <a class="sidebar-link" href="#states">State Pills</a>
+  <a class="sidebar-link" href="#rules">Rules & Accents</a>
+
+  <span class="sidebar-section-label">Application</span>
+  <a class="sidebar-link" href="#email">Email</a>
+  <a class="sidebar-link" href="#dodonts">Do's & Don'ts</a>
+</nav>
+
+<!-- ── MAIN ───────────────────────────────────────── -->
+<main class="main">
+<div class="content">
+
+  <!-- Hero -->
+  <div style="margin-bottom:80px;">
+    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:16px;">Dhyana · Style Guide · v1.0</p>
+    <h1 style="font-family:'DM Serif Display',serif;font-style:italic;font-size:48px;font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:var(--text-1);margin-bottom:20px;">Still. Warm. Alive.</h1>
+    <p style="font-size:16px;font-weight:300;color:var(--text-2);line-height:1.7;max-width:520px;">The complete visual and interaction language for Dhyana. Every decision here is grounded in research and purpose — not aesthetics alone.</p>
+  </div>
+
+  <!-- ── PHILOSOPHY ─────────────────────────────── -->
+  <section class="section" id="philosophy">
+    <p class="section-label">01 · Foundation</p>
+    <h2 class="section-title">Philosophy</h2>
+    <p class="section-desc">Every design decision passes through one test.</p>
+
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:40px 40px;">
+      <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:22px;color:var(--text-1);line-height:1.4;margin-bottom:24px;">"Does this feel like taking a breath?"</p>
+      <p style="font-size:14px;font-weight:300;color:var(--text-2);line-height:1.8;">If it feels like filling out a form — start over.<br>
+      If it feels like opening a notification — start over.<br>
+      If it feels like a dashboard — start over.<br>
+      If it makes someone exhale slightly when they see it — <span style="color:var(--text-1);">you're there.</span></p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;padding:24px;">
+        <p style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:12px;">The Promise</p>
+        <p style="font-size:14px;font-weight:300;color:var(--text-2);line-height:1.7;">When someone opens Dhyana, before they do anything, they should feel: <span style="color:var(--text-1);font-style:italic;">"Someone made this for me."</span></p>
+      </div>
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;padding:24px;">
+        <p style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:12px;">After Check-In</p>
+        <p style="font-size:14px;font-weight:300;color:var(--text-2);line-height:1.7;">After they check in, they should feel: <span style="color:var(--text-1);font-style:italic;">"I know where I am now."</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VOICE & TONE ───────────────────────────── -->
+  <section class="section" id="voice">
+    <p class="section-label">02 · Foundation</p>
+    <h2 class="section-title">Voice & Tone</h2>
+    <p class="section-desc">Sparse. Warm. Direct. Grounded in the body. Never judgment.</p>
+
+    <div class="voice-card">
+      <p class="voice-surface">App UI — Check-in prompt</p>
+      <p class="voice-label">✓ Use</p>
+      <p class="voice-yes">"Where are you right now?"</p>
+      <p class="voice-label">✗ Not</p>
+      <p class="voice-no">"Please complete your daily nervous system assessment to generate your score."</p>
+    </div>
+
+    <div class="voice-card">
+      <p class="voice-surface">State reveal</p>
+      <p class="voice-label">✓ Use</p>
+      <p class="voice-yes">"Restful Alertness. Calm and clear. Fully present. Ready."</p>
+      <p class="voice-label">✗ Not</p>
+      <p class="voice-no">"Your nervous system state has been classified as Restful Alertness (Score: 84/100)."</p>
+    </div>
+
+    <div class="voice-card">
+      <p class="voice-surface">Email — state-aware opening</p>
+      <p class="voice-label">✓ Use</p>
+      <p class="voice-yes">"You showed up running hot. Dhyana would know what to do with that."</p>
+      <p class="voice-label">✗ Not</p>
+      <p class="voice-no">"Thank you for signing up! Based on your selected state (Activated), we think you'll love our stress management features."</p>
+    </div>
+
+    <div class="voice-card">
+      <p class="voice-surface">Push notification (Phase 3 Agent)</p>
+      <p class="voice-label">✓ Use</p>
+      <p class="voice-yes">"Your nervous system is activated right now. You have 8 minutes. Here's something that will help."</p>
+      <p class="voice-label">✗ Not</p>
+      <p class="voice-no">"🔥 Don't break your streak! Check in now to maintain your 7-day wellness journey."</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:20px;">Words — Use vs. Avoid</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div>
+        <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--regulated);margin-bottom:12px;">Use</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${['Where you are', 'Right now', 'Your nervous system', 'Protocol', 'Practice', 'Know / notice / recognize', 'Regulated / activated / depleted', 'Steady / clear / ready'].map(w => `<span style="font-size:13px;font-weight:300;color:var(--text-2);">${w}</span>`).join('')}
+        </div>
+      </div>
+      <div>
+        <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--activated);margin-bottom:12px;">Avoid</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${['Stressed', 'Anxiety / anxious', 'Optimize / optimization', 'Wellness', 'Journey', 'Transform', 'Track', 'Streak', 'Score (user-facing)'].map(w => `<span style="font-size:13px;font-weight:300;color:var(--text-3);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.15);">${w}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COLOR ──────────────────────────────────── -->
+  <section class="section" id="color">
+    <p class="section-label">03 · Visual</p>
+    <h2 class="section-title">Color</h2>
+    <p class="section-desc">State colors carry meaning. They are not decorative. They appear when a state is identified — never as UI chrome.</p>
+
+    <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);margin-bottom:16px;">Nervous System States</p>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#E8A855;"></div>
+        <div class="swatch-info">
+          <p class="swatch-name">Restful Alertness</p>
+          <p class="swatch-hex">#E8A855</p>
+          <p class="swatch-desc">Warm amber. Morning sun. The optimal state.</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#6FA89A;"></div>
+        <div class="swatch-info">
+          <p class="swatch-name">Regulated</p>
+          <p class="swatch-hex">#6FA89A</p>
+          <p class="swatch-desc">Soft teal. Balanced. Neither warm nor cool.</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#C96B5A;"></div>
+        <div class="swatch-info">
+          <p class="swatch-name">Activated</p>
+          <p class="swatch-hex">#C96B5A</p>
+          <p class="swatch-desc">Muted coral. Heat without alarm.</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#5A6E8A;"></div>
+        <div class="swatch-info">
+          <p class="swatch-name">Depleted</p>
+          <p class="swatch-hex">#5A6E8A</p>
+          <p class="swatch-desc">Slate blue. Heavy. Low energy, low light.</p>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-block" style="background:#7A6880;"></div>
+        <div class="swatch-info">
+          <p class="swatch-name">Dysregulated</p>
+          <p class="swatch-hex">#7A6880</p>
+          <p class="swatch-desc">Muted mauve. Mixed signals. Uncertain.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);margin-bottom:16px;">UI Colors</p>
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:8px 20px;">
+      <div class="ui-color-row">
+        <div class="ui-swatch" style="background:#0E1219;border:1px solid rgba(255,255,255,0.12);"></div>
+        <div class="ui-color-info">
+          <p class="ui-color-name">Background</p>
+          <p class="ui-color-meta">#0E1219</p>
+        </div>
+        <p class="ui-color-use">Base layer. All screens.</p>
+      </div>
+      <div class="ui-color-row">
+        <div class="ui-swatch" style="background:rgba(255,255,255,0.88);"></div>
+        <div class="ui-color-info">
+          <p class="ui-color-name">Text Primary</p>
+          <p class="ui-color-meta">rgba(255,255,255,0.88)</p>
+        </div>
+        <p class="ui-color-use">Headlines, state names, active labels</p>
+      </div>
+      <div class="ui-color-row">
+        <div class="ui-swatch" style="background:rgba(255,255,255,0.52);"></div>
+        <div class="ui-color-info">
+          <p class="ui-color-name">Text Secondary</p>
+          <p class="ui-color-meta">rgba(255,255,255,0.52)</p>
+        </div>
+        <p class="ui-color-use">Descriptions, body copy, wordmark</p>
+      </div>
+      <div class="ui-color-row">
+        <div class="ui-swatch" style="background:rgba(255,255,255,0.28);"></div>
+        <div class="ui-color-info">
+          <p class="ui-color-name">Text Tertiary</p>
+          <p class="ui-color-meta">rgba(255,255,255,0.28)</p>
+        </div>
+        <p class="ui-color-use">Hints, placeholders, fine print</p>
+      </div>
+      <div class="ui-color-row">
+        <div class="ui-swatch" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.04);"></div>
+        <div class="ui-color-info">
+          <p class="ui-color-name">Border</p>
+          <p class="ui-color-meta">rgba(255,255,255,0.08)</p>
+        </div>
+        <p class="ui-color-use">Dividers, card edges, input borders</p>
+      </div>
+      <div class="ui-color-row">
+        <div class="ui-swatch" style="background:rgba(255,255,255,0.05);"></div>
+        <div class="ui-color-info">
+          <p class="ui-color-name">Surface Raised</p>
+          <p class="ui-color-meta">rgba(255,255,255,0.04–0.06)</p>
+        </div>
+        <p class="ui-color-use">Cards, inputs, elevated containers</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TYPOGRAPHY ─────────────────────────────── -->
+  <section class="section" id="typography">
+    <p class="section-label">04 · Visual</p>
+    <h2 class="section-title">Typography</h2>
+    <p class="section-desc">DM Serif Display for warmth and weight. DM Sans at 300–400 for everything else. Never heavy — pressure is the opposite of what Dhyana does.</p>
+
+    <div>
+      <div class="type-specimen">
+        <div class="type-example">
+          <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:18px;color:var(--text-2);">Dhyana</p>
+        </div>
+        <div class="type-specs">
+          <div class="type-spec-row"><span class="type-spec-label">Face</span><span class="type-spec-val">DM Serif Display</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Style</span><span class="type-spec-val">Italic</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Size</span><span class="type-spec-val">18–22px</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Color</span><span class="type-spec-val">text-2</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Usage</span><span class="type-spec-val">Wordmark only</span></div>
+        </div>
+      </div>
+
+      <div class="type-specimen">
+        <div class="type-example">
+          <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:30px;color:var(--text-1);line-height:1.2;letter-spacing:-0.01em;">Restful Alertness</p>
+        </div>
+        <div class="type-specs">
+          <div class="type-spec-row"><span class="type-spec-label">Face</span><span class="type-spec-val">DM Serif Display</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Style</span><span class="type-spec-val">Italic</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Size</span><span class="type-spec-val">26–32px</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Track</span><span class="type-spec-val">-0.01em</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Usage</span><span class="type-spec-val">State name, headlines</span></div>
+        </div>
+      </div>
+
+      <div class="type-specimen">
+        <div class="type-example">
+          <p style="font-family:'DM Sans',sans-serif;font-size:20px;font-weight:300;color:var(--text-1);line-height:1.4;letter-spacing:-0.01em;">Where are you <em style="color:var(--text-2);">right now?</em></p>
+        </div>
+        <div class="type-specs">
+          <div class="type-spec-row"><span class="type-spec-label">Face</span><span class="type-spec-val">DM Sans</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Weight</span><span class="type-spec-val">300</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Size</span><span class="type-spec-val">18–20px</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Leading</span><span class="type-spec-val">1.4</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Usage</span><span class="type-spec-val">Primary prompts</span></div>
+        </div>
+      </div>
+
+      <div class="type-specimen">
+        <div class="type-example">
+          <p style="font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:var(--text-2);line-height:1.7;">Calm and clear. Fully present. Ready to move from whatever state you were in into the one you actually want to be in.</p>
+        </div>
+        <div class="type-specs">
+          <div class="type-spec-row"><span class="type-spec-label">Face</span><span class="type-spec-val">DM Sans</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Weight</span><span class="type-spec-val">300</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Size</span><span class="type-spec-val">14–15px</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Leading</span><span class="type-spec-val">1.7</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Usage</span><span class="type-spec-val">Body, descriptions, email</span></div>
+        </div>
+      </div>
+
+      <div class="type-specimen">
+        <div class="type-example">
+          <p style="font-family:'DM Sans',sans-serif;font-size:10px;font-weight:400;color:var(--text-3);letter-spacing:0.14em;text-transform:uppercase;">Energized</p>
+        </div>
+        <div class="type-specs">
+          <div class="type-spec-row"><span class="type-spec-label">Face</span><span class="type-spec-val">DM Sans</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Weight</span><span class="type-spec-val">400</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Size</span><span class="type-spec-val">9–11px</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Track</span><span class="type-spec-val">+0.13–0.16em</span></div>
+          <div class="type-spec-row"><span class="type-spec-label">Usage</span><span class="type-spec-val">Axis labels, section labels</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPACING ────────────────────────────────── -->
+  <section class="section" id="spacing">
+    <p class="section-label">05 · Visual</p>
+    <h2 class="section-title">Spacing</h2>
+    <p class="section-desc">8px base grid. Whitespace is not emptiness — it is calm made visible. When in doubt, add more.</p>
+
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:8px 20px;">
+      ${[
+        ['4px',  4,   'Icon gaps, tight label spacing'],
+        ['8px',  8,   'Inline element gaps'],
+        ['12px', 12,  'Small component padding'],
+        ['16px', 16,  'Component internal padding'],
+        ['20px', 20,  'Mobile screen edge padding'],
+        ['24px', 24,  'Section gaps, card padding'],
+        ['32px', 32,  'Between major elements'],
+        ['40px', 40,  'Section breathing room'],
+        ['48px', 48,  'Screen top/bottom padding'],
+        ['64px', 64,  'Large section separation'],
+      ].map(([label, w, use]) => `
+      <div class="spacing-row">
+        <span class="spacing-label">${label}</span>
+        <div class="spacing-bar-wrap"><div class="spacing-bar" style="width:${Math.min(w * 2, 200)}px;"></div></div>
+        <span class="spacing-use">${use}</span>
+      </div>`).join('')}
+    </div>
+  </section>
+
+  <!-- ── MOTION ─────────────────────────────────── -->
+  <section class="section" id="motion">
+    <p class="section-label">06 · Visual</p>
+    <h2 class="section-title">Motion</h2>
+    <p class="section-desc">Everything that moves in Dhyana communicates one thing: <em>something alive.</em> Slow is right. Nothing is instantaneous. Nothing draws attention to itself.</p>
+
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:8px 20px;">
+      <div class="motion-row">
+        <span class="motion-name">Orb ambient breathe</span>
+        <span class="motion-val">7s ease-in-out infinite · scale(1→1.022)</span>
+        <span class="motion-use">The orb is alive</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Glow breathe</span>
+        <span class="motion-val">6s ease-in-out infinite · opacity + scale</span>
+        <span class="motion-use">Ambient warmth</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Specular shimmer</span>
+        <span class="motion-val">9s ease-in-out infinite · translate XY</span>
+        <span class="motion-use">Something under the surface</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Indicator placement</span>
+        <span class="motion-val">350ms cubic-bezier(0.34,1.56,0.64,1)</span>
+        <span class="motion-use">Spring — arrives, doesn't snap</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">State reveal</span>
+        <span class="motion-val">500ms ease · opacity + translateY(5px→0)</span>
+        <span class="motion-use">Recognition takes a moment</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Content fade-up</span>
+        <span class="motion-val">600ms ease · opacity + translateY(8px→0)</span>
+        <span class="motion-use">Form, reveal line</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Ripple expansion</span>
+        <span class="motion-val">1400ms · 3 rings · staggered 180ms</span>
+        <span class="motion-use">Touch had an effect</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Volume control fade-in</span>
+        <span class="motion-val">1800ms ease · 2s delay · opacity 0→1</span>
+        <span class="motion-use">Doesn't distract on load</span>
+      </div>
+      <div class="motion-row">
+        <span class="motion-name">Color transitions</span>
+        <span class="motion-val">1400ms ease</span>
+        <span class="motion-use">State color shifts, glow changes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── THE ORB ─────────────────────────────────── -->
+  <section class="section" id="orb">
+    <p class="section-label">07 · Visual</p>
+    <h2 class="section-title">The Orb</h2>
+    <p class="section-desc">The orb is not a UI element. It is the product. It only appears in the context of check-in — never decoratively.</p>
+
+    <div class="spec">
+      <div class="spec-preview" style="min-height:280px;">
+        <div class="orb-demo" style="width:200px;height:200px;"></div>
+      </div>
+      <div class="spec-meta">
+        <div class="spec-item"><span class="spec-key">Mobile size</span><span class="spec-val">min(260px, 58vw, 44vh)</span></div>
+        <div class="spec-item"><span class="spec-key">Desktop size</span><span class="spec-val">min(300px, 40vw, 42vh)</span></div>
+        <div class="spec-item"><span class="spec-key">Shadow</span><span class="spec-val">0 20px 56px rgba(0,0,0,0.5)</span></div>
+        <div class="spec-item"><span class="spec-key">Border</span><span class="spec-val">1px rgba(255,255,255,0.05)</span></div>
+        <div class="spec-item"><span class="spec-key">Breathe</span><span class="spec-val">7s ease-in-out infinite</span></div>
+      </div>
+    </div>
+
+    <p style="font-size:13px;font-weight:300;color:var(--text-2);line-height:1.7;margin-top:20px;">The orb maps the nervous system state space. Upper-right quadrant is Restful Alertness (warm amber). Upper-left is Activated (coral). Lower-left is Depleted (slate blue). Lower-right is Dysregulated (mauve). Center is Regulated (teal). The gradient is always present — state color shifts the ambient glow when a state is identified, not the orb itself.</p>
+  </section>
+
+  <!-- ── BUTTONS ────────────────────────────────── -->
+  <section class="section" id="buttons">
+    <p class="section-label">08 · Components</p>
+    <h2 class="section-title">Buttons</h2>
+    <p class="section-desc">Three variants. Primary is amber — used sparingly, only for the single most important action on a screen. Never more than one primary button visible at once.</p>
+
+    <div class="spec">
+      <div class="spec-preview" style="gap:16px;flex-wrap:wrap;">
+        <button class="btn btn-primary">Join waitlist</button>
+        <button class="btn btn-secondary">Learn more</button>
+        <button class="btn btn-ghost">Skip</button>
+      </div>
+      <div class="spec-meta">
+        <div class="spec-item"><span class="spec-key">Primary bg</span><span class="spec-val">#E8A855</span></div>
+        <div class="spec-item"><span class="spec-key">Primary text</span><span class="spec-val">#0E1219</span></div>
+        <div class="spec-item"><span class="spec-key">Radius</span><span class="spec-val">100px</span></div>
+        <div class="spec-item"><span class="spec-key">Padding</span><span class="spec-val">12px 24px</span></div>
+        <div class="spec-item"><span class="spec-key">Font</span><span class="spec-val">DM Sans 500 14px</span></div>
+        <div class="spec-item"><span class="spec-key">Active</span><span class="spec-val">scale(0.97)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INPUTS ─────────────────────────────────── -->
+  <section class="section" id="inputs">
+    <p class="section-label">09 · Components</p>
+    <h2 class="section-title">Inputs</h2>
+    <p class="section-desc">Pill-shaped. Translucent. Amber focus ring — subtle, not aggressive.</p>
+
+    <div class="spec">
+      <div class="spec-preview" style="flex-direction:column;gap:16px;align-items:stretch;max-width:360px;width:100%;">
+        <div class="input-wrap">
+          <input type="email" placeholder="your@email.com">
+          <button class="btn btn-primary btn-sm">Join waitlist</button>
+        </div>
+        <p class="form-note-text">Early access · No spam · Unsubscribe anytime</p>
+      </div>
+      <div class="spec-meta">
+        <div class="spec-item"><span class="spec-key">Background</span><span class="spec-val">rgba(255,255,255,0.05)</span></div>
+        <div class="spec-item"><span class="spec-key">Border</span><span class="spec-val">rgba(255,255,255,0.08)</span></div>
+        <div class="spec-item"><span class="spec-key">Focus border</span><span class="spec-val">rgba(232,168,85,0.30)</span></div>
+        <div class="spec-item"><span class="spec-key">Radius</span><span class="spec-val">100px</span></div>
+        <div class="spec-item"><span class="spec-key">Padding</span><span class="spec-val">6px 6px 6px 20px</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STATE PILLS ────────────────────────────── -->
+  <section class="section" id="states">
+    <p class="section-label">10 · Components</p>
+    <h2 class="section-title">State Pills</h2>
+    <p class="section-desc">Used to display the identified state in compact contexts — trends, history, protocol headers. Always includes the state color dot.</p>
+
+    <div class="spec">
+      <div class="spec-preview" style="gap:10px;flex-wrap:wrap;">
+        <div class="state-pill"><div class="state-dot" style="background:#E8A855;"></div>Restful Alertness</div>
+        <div class="state-pill"><div class="state-dot" style="background:#6FA89A;"></div>Regulated</div>
+        <div class="state-pill"><div class="state-dot" style="background:#C96B5A;"></div>Activated</div>
+        <div class="state-pill"><div class="state-dot" style="background:#5A6E8A;"></div>Depleted</div>
+        <div class="state-pill"><div class="state-dot" style="background:#7A6880;"></div>Dysregulated</div>
+      </div>
+      <div class="spec-meta">
+        <div class="spec-item"><span class="spec-key">Background</span><span class="spec-val">rgba(255,255,255,0.04)</span></div>
+        <div class="spec-item"><span class="spec-key">Border</span><span class="spec-val">rgba(255,255,255,0.08)</span></div>
+        <div class="spec-item"><span class="spec-key">Dot size</span><span class="spec-val">8px</span></div>
+        <div class="spec-item"><span class="spec-key">Radius</span><span class="spec-val">100px</span></div>
+        <div class="spec-item"><span class="spec-key">Font</span><span class="spec-val">DM Sans 400 12px</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RULES & ACCENTS ────────────────────────── -->
+  <section class="section" id="rules">
+    <p class="section-label">11 · Components</p>
+    <h2 class="section-title">Rules & Accents</h2>
+    <p class="section-desc">The accent rule — a 32px line in the state color — is the one moment of color in the email template. Understated but meaningful.</p>
+
+    <div class="spec">
+      <div class="spec-preview" style="flex-direction:column;gap:24px;align-items:flex-start;padding:40px;">
+        ${['#E8A855','#6FA89A','#C96B5A','#5A6E8A','#7A6880'].map(c =>
+          `<div style="width:32px;height:1.5px;background:${c};opacity:0.8;border-radius:1px;"></div>`
+        ).join('')}
+      </div>
+      <div class="spec-meta">
+        <div class="spec-item"><span class="spec-key">Width</span><span class="spec-val">32px</span></div>
+        <div class="spec-item"><span class="spec-key">Height</span><span class="spec-val">1.5px</span></div>
+        <div class="spec-item"><span class="spec-key">Opacity</span><span class="spec-val">0.8</span></div>
+        <div class="spec-item"><span class="spec-key">Color</span><span class="spec-val">Current state color</span></div>
+        <div class="spec-item"><span class="spec-key">Usage</span><span class="spec-val">Email header only</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EMAIL ──────────────────────────────────── -->
+  <section class="section" id="email">
+    <p class="section-label">12 · Application</p>
+    <h2 class="section-title">Email</h2>
+    <p class="section-desc">The confirmation email should feel like opening the site. Same background, same type, same quiet. The accent rule carries the state color — the one personal touch.</p>
+
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:16px;align-items:center;">
+        <span style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);">From</span>
+        <span style="font-size:12px;color:var(--text-2);">Dhyana &lt;hello@dhyanaflow.com&gt;</span>
+        <span style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);margin-left:auto;">Subject</span>
+        <span style="font-size:12px;color:var(--text-2);">You're on the Dhyana waitlist.</span>
+      </div>
+      <div style="padding:40px;background:#0E1219;border-radius:0 0 12px 12px;">
+        <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:20px;color:rgba(255,255,255,0.5);margin-bottom:40px;">Dhyana</p>
+        <div style="width:32px;height:1.5px;background:#E8A855;opacity:0.8;margin-bottom:28px;"></div>
+        <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:26px;color:rgba(255,255,255,0.92);margin-bottom:24px;line-height:1.25;">You're on the list.</p>
+        <p style="font-family:Helvetica,sans-serif;font-size:14px;font-weight:300;color:rgba(255,255,255,0.72);line-height:1.7;margin-bottom:20px;">You showed up clear. That's rarer than it sounds.</p>
+        <p style="font-family:Helvetica,sans-serif;font-size:14px;font-weight:300;color:rgba(255,255,255,0.44);line-height:1.7;margin-bottom:20px;">Dhyana reads your nervous system — not your steps, your sleep score, or your streak. Just where you actually are. Then it tells you exactly what to do about it.</p>
+        <p style="font-family:Helvetica,sans-serif;font-size:14px;font-weight:300;color:rgba(255,255,255,0.44);line-height:1.7;margin-bottom:40px;">We'll find you when it's ready.</p>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);padding-top:24px;">
+          <p style="font-family:Helvetica,sans-serif;font-size:11px;color:rgba(255,255,255,0.2);line-height:1.7;letter-spacing:0.03em;">dhyanaflow.com · You received this because you joined the Dhyana waitlist.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;padding:14px;">
+        <p style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);margin-bottom:6px;">Max width</p>
+        <p style="font-size:12px;color:var(--text-2);font-family:monospace;">480px</p>
+      </div>
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;padding:14px;">
+        <p style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);margin-bottom:6px;">Padding</p>
+        <p style="font-size:12px;color:var(--text-2);font-family:monospace;">56px top · 24px sides</p>
+      </div>
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:8px;padding:14px;">
+        <p style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-4);margin-bottom:6px;">From</p>
+        <p style="font-size:12px;color:var(--text-2);font-family:monospace;">hello@dhyanaflow.com</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DO / DON'TS ────────────────────────────── -->
+  <section class="section" id="dodonts">
+    <p class="section-label">13 · Application</p>
+    <h2 class="section-title">Do's & Don'ts</h2>
+    <p class="section-desc">What Dhyana never does is as important as what it does.</p>
+
+    <div class="do-dont">
+      <div class="do-card">
+        <p class="do-label">✓ Do</p>
+        <p class="do-text">One primary action per screen</p>
+      </div>
+      <div class="dont-card">
+        <p class="dont-label">✗ Don't</p>
+        <p class="dont-text">Multiple CTAs competing for attention</p>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="do-card">
+        <p class="do-label">✓ Do</p>
+        <p class="do-text">State colors on state-identified moments only</p>
+      </div>
+      <div class="dont-card">
+        <p class="dont-label">✗ Don't</p>
+        <p class="dont-text">State colors as decorative UI accents</p>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="do-card">
+        <p class="do-label">✓ Do</p>
+        <p class="do-text">Generous whitespace — when in doubt, add more</p>
+      </div>
+      <div class="dont-card">
+        <p class="dont-label">✗ Don't</p>
+        <p class="dont-text">Tight layouts that feel like information architecture</p>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="do-card">
+        <p class="do-label">✓ Do</p>
+        <p class="do-text">DM Sans at weight 300–400 only</p>
+      </div>
+      <div class="dont-card">
+        <p class="dont-label">✗ Don't</p>
+        <p class="dont-text">Bold or heavy type — pressure is the opposite of Dhyana</p>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="do-card">
+        <p class="do-label">✓ Do</p>
+        <p class="do-text">Slow, purposeful animation — everything alive, nothing showy</p>
+      </div>
+      <div class="dont-card">
+        <p class="dont-label">✗ Don't</p>
+        <p class="dont-text">Fast transitions or playful bounce physics</p>
+      </div>
+    </div>
+    <div class="do-dont">
+      <div class="do-card">
+        <p class="do-label">✓ Do</p>
+        <p class="do-text">Non-judgmental language — there is no bad state</p>
+      </div>
+      <div class="dont-card">
+        <p class="dont-label">✗ Don't</p>
+        <p class="dont-text">Streaks, badges, or anything that implies you can fail</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────── -->
+  <div class="guide-footer">
+    <p>Dhyana Style Guide · v1.0 · March 2026<br>
+    Prepared by Wakizashi · workspace-design/dhyana-style-guide.html<br>
+    Living document — update as the product evolves.</p>
+  </div>
+
+</div>
+</main>
+</div>
+</body>
+</html>

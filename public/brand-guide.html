@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhyana — Brand Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0E1219;
+  --bg-raised:   rgba(255,255,255,0.03);
+  --bg-elevated: rgba(255,255,255,0.055);
+  --border:      rgba(255,255,255,0.08);
+  --text-1:      rgba(255,255,255,0.88);
+  --text-2:      rgba(255,255,255,0.52);
+  --text-3:      rgba(255,255,255,0.28);
+  --text-4:      rgba(255,255,255,0.14);
+  --restful:     #E8A855;
+  --regulated:   #6FA89A;
+  --activated:   #C96B5A;
+  --depleted:    #5A6E8A;
+  --dysreg:      #7A6880;
+  --sidebar-w:   220px;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100%;
+}
+
+.layout { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  padding: 40px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-wordmark {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--text-2);
+  padding: 0 28px 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.sidebar-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  padding: 0 28px 10px;
+  margin-top: 20px;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 7px 28px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.sidebar-link:hover { color: var(--text-1); }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  padding: 80px 64px 120px;
+}
+
+.content { max-width: 720px; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 96px; }
+
+.section-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 32px;
+  color: var(--text-1);
+  margin-bottom: 32px;
+  line-height: 1.2;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 40px 0;
+}
+
+/* ── PROSE ── */
+.prose p {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  max-width: 620px;
+}
+
+.prose p:last-child { margin-bottom: 0; }
+
+.prose em {
+  color: var(--text-1);
+  font-style: italic;
+}
+
+.prose strong {
+  color: var(--text-1);
+  font-weight: 400;
+}
+
+/* ── PULL QUOTE ── */
+.pull-quote {
+  border-left: 1.5px solid rgba(255,255,255,0.12);
+  padding: 4px 0 4px 24px;
+  margin: 32px 0;
+}
+
+.pull-quote p {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--text-1);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+}
+
+.card-label {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 12px;
+}
+
+.card-text {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.75;
+}
+
+.card-text em { color: var(--text-1); font-style: italic; }
+
+/* ── PHASE STEPS ── */
+.phases {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 24px 0;
+}
+
+.phase {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.phase-num {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--text-4);
+  width: 48px;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.phase-text {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.phase-text em { color: var(--text-1); font-style: normal; }
+
+/* ── VOICE ATTRIBUTES ── */
+.voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.voice-attr {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+}
+
+.voice-attr-name {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-1);
+  margin-bottom: 8px;
+}
+
+.voice-attr-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-3);
+  line-height: 1.65;
+}
+
+/* ── TONE BY SURFACE ── */
+.surface-row {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+.surface-row:last-child { border-bottom: none; }
+
+.surface-name {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-4);
+  margin-bottom: 8px;
+}
+
+.surface-example {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-1);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.surface-note {
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+/* ── WORD LIST ── */
+.word-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.word-col-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.word-item {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* ── STATE COLORS ── */
+.state-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.state-swatch {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.state-block { height: 64px; }
+
+.state-info {
+  background: var(--bg-raised);
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+}
+
+.state-name {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-1);
+  margin-bottom: 3px;
+}
+
+.state-hex {
+  font-size: 10px;
+  color: var(--text-3);
+  font-family: 'SF Mono', monospace;
+  margin-bottom: 4px;
+}
+
+.state-why {
+  font-size: 10px;
+  color: var(--text-4);
+  line-height: 1.4;
+}
+
+/* ── NEVER LIST ── */
+.never-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 24px 0;
+}
+
+.never-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  border-left: 2px solid rgba(201,107,90,0.3);
+}
+
+.never-rule {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-1);
+  margin-bottom: 5px;
+}
+
+.never-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-3);
+  line-height: 1.6;
+}
+
+/* ── THE TEST ── */
+.test-block {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+}
+
+.test-question {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 24px;
+  color: var(--text-1);
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+
+.test-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.test-row {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.test-fail { color: var(--text-3); }
+.test-fail span { color: var(--activated); }
+.test-pass { color: var(--text-1); margin-top: 8px; }
+.test-pass span { color: var(--restful); }
+
+/* ── LOGO RULES ── */
+.logo-rules {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 24px 0;
+}
+
+.logo-rule {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-2);
+  line-height: 1.6;
+  padding: 12px 16px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.logo-rule-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-4);
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+
+/* ── FOOTER ── */
+.guide-footer {
+  margin-top: 96px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.guide-footer p {
+  font-size: 11px;
+  color: var(--text-4);
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-wordmark">Dhyana</div>
+
+  <span class="sidebar-label">Foundation</span>
+  <a class="sidebar-link" href="#philosophy">Philosophy</a>
+  <a class="sidebar-link" href="#what-it-is">What It Is</a>
+  <a class="sidebar-link" href="#promise">The Promise</a>
+
+  <span class="sidebar-label">Voice</span>
+  <a class="sidebar-link" href="#voice">How It Speaks</a>
+  <a class="sidebar-link" href="#words">Word Choices</a>
+  <a class="sidebar-link" href="#surfaces">Tone by Surface</a>
+
+  <span class="sidebar-label">Visual</span>
+  <a class="sidebar-link" href="#three-words">Three Words</a>
+  <a class="sidebar-link" href="#color">Color</a>
+  <a class="sidebar-link" href="#typography">Typography</a>
+  <a class="sidebar-link" href="#logo">Logo</a>
+
+  <span class="sidebar-label">Application</span>
+  <a class="sidebar-link" href="#never">What It Never Does</a>
+  <a class="sidebar-link" href="#test">The Design Test</a>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+<div class="content">
+
+  <!-- Hero -->
+  <div style="margin-bottom:80px;">
+    <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:16px;">Dhyana · Brand Guide · v1.0 · March 2026</p>
+    <h1 style="font-family:'DM Serif Display',serif;font-style:italic;font-size:48px;font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:var(--text-1);margin-bottom:24px;">Not an app you open.<br>A presence that knows you.</h1>
+    <p style="font-size:16px;font-weight:300;color:var(--text-2);line-height:1.7;max-width:520px;">The complete brand foundation for Dhyana — what it believes, how it speaks, how it looks, and what it refuses to be.</p>
+  </div>
+
+  <!-- ── PHILOSOPHY ── -->
+  <section class="section" id="philosophy">
+    <p class="section-label">01 · Foundation</p>
+    <h2 class="section-title">What Dhyana Believes</h2>
+
+    <div class="prose">
+      <p>The human nervous system is not broken. It is responding — accurately, intelligently — to the conditions it's been given. Stress is not a character flaw. Depletion is not weakness. Dysregulation is not failure. These are states. <em>States can be changed.</em></p>
+      <p>Most people walk through their days without ever knowing where they actually are. Not emotionally, not physiologically. They are running on the nervous system equivalent of a car with no dashboard — vaguely aware something's off, never quite sure what to do about it.</p>
+      <p>Dhyana believes the most powerful thing a person can do — before the meditation, before the breathwork, before any protocol — is simply to know. To take three seconds and honestly place themselves:</p>
+    </div>
+
+    <div class="pull-quote">
+      <p>"This is where I am right now."</p>
+    </div>
+
+    <div class="prose">
+      <p>That act of recognition is itself the intervention. Everything else flows from it.</p>
+    </div>
+  </section>
+
+  <!-- ── WHAT IT IS ── -->
+  <section class="section" id="what-it-is">
+    <p class="section-label">02 · Foundation</p>
+    <h2 class="section-title">What Dhyana Is</h2>
+
+    <div class="prose">
+      <p>A nervous system intelligence. Not a meditation app, not a fitness tracker, not a wellness dashboard. Those things exist. Dhyana is something different: a system that reads where you are and tells you <em>exactly what to do about it.</em></p>
+    </div>
+
+    <div class="phases">
+      <div class="phase">
+        <span class="phase-num">Phase 1</span>
+        <span class="phase-text"><em>It asks you where you are.</em></span>
+      </div>
+      <div class="phase">
+        <span class="phase-num">Phase 2</span>
+        <span class="phase-text"><em>It already knows.</em></span>
+      </div>
+      <div class="phase">
+        <span class="phase-num">Phase 3</span>
+        <span class="phase-text"><em>It reaches you before you think to look.</em></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-4);margin-bottom:16px;">What It Is Not</p>
+
+    <div class="prose">
+      <p>It is not a streak. There is no counter that resets if you miss a day. No badge for consistency. No gamification layer that turns self-knowledge into a score to protect.</p>
+      <p>It is not a diagnosis. It does not tell you what is wrong with you. It tells you where you are — and what, from here, might help.</p>
+      <p>It is not a meditation app with better branding. It gives you protocols matched to your actual state — the difference between a doctor who gives everyone the same prescription and one who actually reads your chart.</p>
+      <p>It is not clinical. It does not look like a medical device, a fitness tracker, or a health records portal. It looks and feels like something made for human beings who want to understand themselves.</p>
+    </div>
+  </section>
+
+  <!-- ── THE PROMISE ── -->
+  <section class="section" id="promise">
+    <p class="section-label">03 · Foundation</p>
+    <h2 class="section-title">The Emotional Promise</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+      <div class="card">
+        <p class="card-label">On opening</p>
+        <p class="card-text"><em>"Someone made this for me."</em></p>
+        <p style="font-size:12px;color:var(--text-4);margin-top:12px;line-height:1.6;">Not for "users." For the version of them that woke up at 3am unable to sleep, or sat at their desk at 2pm unable to remember what they were doing.</p>
+      </div>
+      <div class="card">
+        <p class="card-label">After check-in</p>
+        <p class="card-text"><em>"I know where I am now."</em></p>
+        <p style="font-size:12px;color:var(--text-4);margin-top:12px;line-height:1.6;">That small clarity — that moment of accurate self-location — is the product. Everything else is built on it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── VOICE ── -->
+  <section class="section" id="voice">
+    <p class="section-label">04 · Voice</p>
+    <h2 class="section-title">How Dhyana Speaks</h2>
+
+    <div class="voice-grid">
+      <div class="voice-attr">
+        <p class="voice-attr-name">Sparse</p>
+        <p class="voice-attr-desc">The minimum number of words that carry the full weight. Not minimalism for aesthetics — because the nervous system is already overloaded.</p>
+      </div>
+      <div class="voice-attr">
+        <p class="voice-attr-name">Warm</p>
+        <p class="voice-attr-desc">Speaks like a trusted companion who knows your nervous system — not a doctor reading from a chart, not a chatbot completing a task.</p>
+      </div>
+      <div class="voice-attr">
+        <p class="voice-attr-name">Direct</p>
+        <p class="voice-attr-desc">Does not hedge or over-explain. Says what it means. <em style="color:var(--text-2);">"You're running hot. Here's what will help."</em></p>
+      </div>
+      <div class="voice-attr">
+        <p class="voice-attr-name">Never Judgment</p>
+        <p class="voice-attr-desc">No good state. No bad state. There is only where you are. The language reflects this without exception.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WORD CHOICES ── -->
+  <section class="section" id="words">
+    <p class="section-label">05 · Voice</p>
+    <h2 class="section-title">Word Choices</h2>
+
+    <div class="word-grid">
+      <div>
+        <p class="word-col-label" style="color:var(--regulated);">Use</p>
+        <div class="word-list">
+          ${['Where you are / where you\'re at', 'Right now / in this moment', 'Your nervous system', 'Protocol', 'Practice', 'Know / notice / recognize', 'Regulated / activated / depleted', 'Ready / steady / clear'].map(w =>
+            `<span class="word-item" style="color:var(--text-2);">${w}</span>`
+          ).join('')}
+        </div>
+      </div>
+      <div>
+        <p class="word-col-label" style="color:var(--activated);">Avoid</p>
+        <div class="word-list">
+          ${['Stressed', 'Anxious / anxiety', 'Fix / fixing yourself', 'Optimize / optimization', 'Wellness', 'Journey', 'Transform / transformation', 'Track', 'Score (user-facing)'].map(w =>
+            `<span class="word-item" style="color:var(--text-3);text-decoration:line-through;text-decoration-color:rgba(255,255,255,0.15);">${w}</span>`
+          ).join('')}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SURFACES ── -->
+  <section class="section" id="surfaces">
+    <p class="section-label">06 · Voice</p>
+    <h2 class="section-title">Tone by Surface</h2>
+
+    <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:8px 28px;">
+      <div class="surface-row">
+        <p class="surface-name">App UI — Check-in</p>
+        <p class="surface-example">"Where are you right now?"</p>
+        <p class="surface-note">The quietest version. Almost no words. What's there is precise and warm.</p>
+      </div>
+      <div class="surface-row">
+        <p class="surface-name">State reveal</p>
+        <p class="surface-example">"Restful Alertness. Calm and clear. Fully present. Ready."</p>
+        <p class="surface-note">Recognition, not diagnosis. A reflection, not a label.</p>
+      </div>
+      <div class="surface-row">
+        <p class="surface-name">Email</p>
+        <p class="surface-example">"You showed up running hot. Dhyana would know what to do with that."</p>
+        <p class="surface-note">One register warmer. Acknowledges the specific moment. Short. Never salesy.</p>
+      </div>
+      <div class="surface-row">
+        <p class="surface-name">Marketing / waitlist</p>
+        <p class="surface-example">"Dhyana reads your nervous system and tells you exactly what to do about it."</p>
+        <p class="surface-note">The most expressive version — still spare, but allowed to carry weight.</p>
+      </div>
+      <div class="surface-row">
+        <p class="surface-name">Push notifications (Phase 3)</p>
+        <p class="surface-example">"Your nervous system is activated right now. You have 8 minutes. Here's something that will help."</p>
+        <p class="surface-note">The most intimate surface. Feels like a message from someone who knows you.</p>
+      </div>
+      <div class="surface-row">
+        <p class="surface-name">Error states</p>
+        <p class="surface-example">"Something didn't work. Try again."</p>
+        <p class="surface-note">Warm, human. Zero frustration-inducing language. Never technical.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── THREE WORDS ── -->
+  <section class="section" id="three-words">
+    <p class="section-label">07 · Visual</p>
+    <h2 class="section-title">The Three Words</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px;">
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center;">
+        <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:28px;color:var(--text-1);margin-bottom:12px;">Still</p>
+        <p style="font-size:12px;color:var(--text-3);line-height:1.6;">Nothing restless. Nothing anxious. Every element earns its place.</p>
+      </div>
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center;">
+        <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:28px;color:var(--text-1);margin-bottom:12px;">Warm</p>
+        <p style="font-size:12px;color:var(--text-3);line-height:1.6;">Not cold. Not clinical. A product made for human beings.</p>
+      </div>
+      <div style="background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:28px 24px;text-align:center;">
+        <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:28px;color:var(--text-1);margin-bottom:12px;">Alive</p>
+        <p style="font-size:12px;color:var(--text-3);line-height:1.6;">The orb breathes. The product has presence. It is not inert.</p>
+      </div>
+    </div>
+
+    <div class="prose">
+      <p>Every visual decision runs through these three words. If something feels restless — not Dhyana. If something feels cold — not Dhyana. If something feels inert — not Dhyana.</p>
+    </div>
+  </section>
+
+  <!-- ── COLOR ── -->
+  <section class="section" id="color">
+    <p class="section-label">08 · Visual</p>
+    <h2 class="section-title">Color</h2>
+
+    <div class="prose">
+      <p>State colors are not decorative. They are meaning. Each maps to a precise position on the nervous system state space. They appear when a state is identified — never as UI chrome.</p>
+    </div>
+
+    <div class="state-grid">
+      <div class="state-swatch">
+        <div class="state-block" style="background:#E8A855;"></div>
+        <div class="state-info">
+          <p class="state-name">Restful Alertness</p>
+          <p class="state-hex">#E8A855</p>
+          <p class="state-why">Warmth + clarity. Morning sun. The optimal state.</p>
+        </div>
+      </div>
+      <div class="state-swatch">
+        <div class="state-block" style="background:#6FA89A;"></div>
+        <div class="state-info">
+          <p class="state-name">Regulated</p>
+          <p class="state-hex">#6FA89A</p>
+          <p class="state-why">Steady. Neither warm nor cool. Balanced.</p>
+        </div>
+      </div>
+      <div class="state-swatch">
+        <div class="state-block" style="background:#C96B5A;"></div>
+        <div class="state-info">
+          <p class="state-name">Activated</p>
+          <p class="state-hex">#C96B5A</p>
+          <p class="state-why">Heat without alarm. Running hot.</p>
+        </div>
+      </div>
+      <div class="state-swatch">
+        <div class="state-block" style="background:#5A6E8A;"></div>
+        <div class="state-info">
+          <p class="state-name">Depleted</p>
+          <p class="state-hex">#5A6E8A</p>
+          <p class="state-why">Heavy. Cool. Low energy, low light.</p>
+        </div>
+      </div>
+      <div class="state-swatch">
+        <div class="state-block" style="background:#7A6880;"></div>
+        <div class="state-info">
+          <p class="state-name">Dysregulated</p>
+          <p class="state-hex">#7A6880</p>
+          <p class="state-why">Mixed signals. Uncertain.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-4);margin-bottom:16px;">Background</p>
+    <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--bg-raised);border:1px solid var(--border);border-radius:10px;">
+      <div style="width:40px;height:40px;border-radius:8px;background:#0E1219;border:1px solid rgba(255,255,255,0.15);flex-shrink:0;"></div>
+      <div>
+        <p style="font-size:13px;color:var(--text-1);margin-bottom:3px;">#0E1219</p>
+        <p style="font-size:12px;color:var(--text-3);line-height:1.5;">Deep navy-black. Not pure black (too harsh). Not dark grey (too neutral). This tone reads as night sky, not void.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TYPOGRAPHY ── -->
+  <section class="section" id="typography">
+    <p class="section-label">09 · Visual</p>
+    <h2 class="section-title">Typography</h2>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+      <div class="card">
+        <p class="card-label">DM Serif Display</p>
+        <p style="font-family:'DM Serif Display',serif;font-style:italic;font-size:28px;color:var(--text-1);margin-bottom:12px;">Dhyana</p>
+        <p style="font-size:12px;color:var(--text-3);line-height:1.6;">Wordmark, headlines, state reveals. Italic only. Serif warmth in a sans context — signals this is not a dashboard.</p>
+      </div>
+      <div class="card">
+        <p class="card-label">DM Sans 300</p>
+        <p style="font-family:'DM Sans',sans-serif;font-weight:300;font-size:22px;color:var(--text-1);margin-bottom:12px;">Where are you?</p>
+        <p style="font-size:12px;color:var(--text-3);line-height:1.6;">All UI, body copy, labels. Weight 300–400 only. Never bold — heaviness creates pressure, and pressure is the opposite of what Dhyana does.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── LOGO ── -->
+  <section class="section" id="logo">
+    <p class="section-label">10 · Visual</p>
+    <h2 class="section-title">Logo</h2>
+
+    <div class="prose" style="margin-bottom:24px;">
+      <p>The logo does not yet exist. The wordmark in DM Serif Display italic is the primary identity mark until a proper logomark is developed. When we design it, these are the constraints:</p>
+    </div>
+
+    <div class="logo-rules">
+      <div class="logo-rule"><div class="logo-rule-dot"></div>Wordmark-first until a logomark is developed</div>
+      <div class="logo-rule"><div class="logo-rule-dot"></div>No lotus flowers. No waves. No brain outlines. No rings.</div>
+      <div class="logo-rule"><div class="logo-rule-dot"></div>If there is a symbol, abstract enough to not be cliché and precise enough to carry meaning</div>
+      <div class="logo-rule"><div class="logo-rule-dot"></div>Must work in white on dark and dark on white</div>
+      <div class="logo-rule"><div class="logo-rule-dot"></div>Must be legible at 16px — favicon, notification icon</div>
+    </div>
+  </section>
+
+  <!-- ── NEVER ── -->
+  <section class="section" id="never">
+    <p class="section-label">11 · Application</p>
+    <h2 class="section-title">What Dhyana Never Does</h2>
+
+    <div class="prose" style="margin-bottom:24px;">
+      <p>Brand is as much about what you refuse as what you claim.</p>
+    </div>
+
+    <div class="never-list">
+      <div class="never-item">
+        <div>
+          <p class="never-rule">Never guilts the user</p>
+          <p class="never-desc">No streak that breaks. No push notification that says you've been absent. No UI that implies you're doing it wrong.</p>
+        </div>
+      </div>
+      <div class="never-item">
+        <div>
+          <p class="never-rule">Never overwhelms</p>
+          <p class="never-desc">One thing at a time. One protocol per session. One question at the core of check-in. One state at a time.</p>
+        </div>
+      </div>
+      <div class="never-item">
+        <div>
+          <p class="never-rule">Never medicates with language</p>
+          <p class="never-desc">Does not tell people they are sick or broken. The word "anxiety" does not appear in the product. Neither does "disorder," "treatment," or "management."</p>
+        </div>
+      </div>
+      <div class="never-item">
+        <div>
+          <p class="never-rule">Never gamifies the self</p>
+          <p class="never-desc">The person's nervous system is not a game. Badges, points, leaderboards, and social comparison have no place here.</p>
+        </div>
+      </div>
+      <div class="never-item">
+        <div>
+          <p class="never-rule">Never compromises on the quiet</p>
+          <p class="never-desc">If something feels like it belongs in a productivity app, a fitness tracker, or a meditation app — it probably doesn't belong in Dhyana. The quiet is a feature. Protect it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── THE TEST ── -->
+  <section class="section" id="test">
+    <p class="section-label">12 · Application</p>
+    <h2 class="section-title">The Design Test</h2>
+
+    <div class="test-block">
+      <p class="test-question">"Does this feel like taking a breath?"</p>
+      <div class="test-rows">
+        <p class="test-row test-fail"><span>✗</span> If it feels like filling out a form — start over.</p>
+        <p class="test-row test-fail"><span>✗</span> If it feels like opening a notification — start over.</p>
+        <p class="test-row test-fail"><span>✗</span> If it feels like a dashboard — start over.</p>
+        <p class="test-row test-pass"><span style="color:var(--restful);">✓</span> If it makes someone exhale slightly when they see it — <em style="color:var(--restful);">you're there.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="guide-footer">
+    <p>Dhyana Brand Guide · v1.0 · March 2026<br>
+    Prepared by Wakizashi · workspace-design/dhyana-brand-guide.html<br>
+    Living document — update as the brand evolves.</p>
+  </div>
+
+</div>
+</main>
+</div>
+</body>
+</html>
