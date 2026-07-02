@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Dhyana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0E1219;
+  --text-1: rgba(255,255,255,0.88);
+  --text-2: rgba(255,255,255,0.52);
+  --text-3: rgba(255,255,255,0.28);
+  --restful: #E8A855;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; height: -webkit-fill-available; }
+
+body {
+  min-height: 100%;
+  min-height: -webkit-fill-available;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.orb-container { touch-action: none; }
+
+.screen {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px max(24px, env(safe-area-inset-bottom)) 20px;
+  padding-top: max(24px, env(safe-area-inset-top));
+  gap: 0;
+}
+.screen.hidden { display: none; }
+
+.wordmark {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--text-2);
+  letter-spacing: 0.02em;
+  align-self: center;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+}
+
+/* ── ORB ZONE ─────────────────────────────────────── */
+.orb-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  flex: 0 0 auto;
+  justify-content: center;
+  width: 100%;
+}
+
+.prompt {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text-1);
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+  transition: opacity 0.5s ease;
+  flex-shrink: 0;
+}
+.prompt em { font-style: italic; color: var(--text-2); }
+
+.orb-container {
+  position: relative;
+  --orb-size: min(260px, 58vw, 44vh);
+  width: var(--orb-size);
+  height: var(--orb-size);
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  overflow: visible;
+}
+
+.orb-glow {
+  position: absolute;
+  inset: -32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(111,168,154,0.08) 0%, transparent 70%);
+  filter: blur(20px);
+  transition: background 1.4s ease;
+  pointer-events: none;
+  animation: orb-glow-breathe 6s ease-in-out infinite;
+}
+@keyframes orb-glow-breathe {
+  0%, 100% { opacity: 0.7; transform: scale(1);    }
+  50%       { opacity: 1.0; transform: scale(1.06); }
+}
+
+.orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 80% 80% at 70% 28%,  rgba(232,168,85,0.85)  0%, transparent 52%),
+    radial-gradient(ellipse 72% 72% at 24% 26%,  rgba(201,107,90,0.72)  0%, transparent 52%),
+    radial-gradient(ellipse 70% 70% at 22% 76%,  rgba(90,110,138,0.80)  0%, transparent 52%),
+    radial-gradient(ellipse 68% 68% at 76% 78%,  rgba(122,104,128,0.68) 0%, transparent 52%),
+    radial-gradient(circle at 50% 50%,            rgba(111,168,154,0.55) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%,            #131b26 0%, #0e1219 100%);
+  cursor: crosshair;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 20px 56px rgba(0,0,0,0.5);
+  animation: orb-breathe 7s ease-in-out infinite;
+}
+@keyframes orb-breathe {
+  0%, 100% { transform: scale(1);     }
+  50%       { transform: scale(1.022); }
+}
+
+.orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 40% 28% at 62% 22%, rgba(255,255,255,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 22% 18% at 38% 68%, rgba(255,255,255,0.04) 0%, transparent 60%);
+  animation: orb-shimmer 9s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes orb-shimmer {
+  0%   { opacity: 0.6; transform: translateX(0)    translateY(0); }
+  30%  { opacity: 1.0; transform: translateX(3px)  translateY(-2px); }
+  65%  { opacity: 0.7; transform: translateX(-2px) translateY(3px); }
+  100% { opacity: 0.6; transform: translateX(0)    translateY(0); }
+}
+
+.orb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(14,18,25,0.55) 100%);
+  pointer-events: none;
+}
+
+#rippleCanvas {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.axis-label {
+  position: absolute;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.32);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+.axis-label.top    { top: 13%;  left: 50%; transform: translateX(-50%); }
+.axis-label.bottom { bottom: 13%; left: 50%; transform: translateX(-50%); }
+.axis-label.left   { left: 8%;  top: 50%;  transform: translateY(-50%); }
+.axis-label.right  { right: 8%; top: 50%;  transform: translateY(-50%); }
+
+.indicator {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  transform: translate(-50%, -50%) scale(0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 0 10px rgba(255,255,255,0.25), 0 0 3px rgba(255,255,255,0.5);
+}
+.indicator.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+.state-reveal {
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-top: 20px;
+}
+.state-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.5s ease, transform 0.5s ease, color 0.5s ease;
+}
+.state-name.visible { opacity: 1; transform: translateY(0); }
+.state-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-2);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+}
+.state-desc.visible { opacity: 1; transform: translateY(0); }
+
+.hint {
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: 0.04em;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.hint.hidden { opacity: 0; pointer-events: none; }
+
+/* ── CONTINUE CTA (replaces waitlist) ─────────────── */
+.cta-zone {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  padding-top: 20px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+.cta-zone.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.continue-btn {
+  background: transparent;
+  color: var(--restful);
+  border: 1px solid rgba(232,168,85,0.32);
+  border-radius: 100px;
+  padding: 13px 26px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.continue-btn:hover  { background: rgba(232,168,85,0.10); }
+.continue-btn:active { transform: scale(0.98); }
+.continue-btn span { transition: transform 0.2s; }
+.continue-btn:hover span { transform: translateX(3px); }
+
+/* ── PROTOCOL SCREEN ──────────────────────────────── */
+.screen.s-protocol { justify-content: flex-start; }
+.p-wrap {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  margin: auto 0;
+  padding: 8px 0 24px;
+}
+.p-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-2);
+  margin-bottom: 22px;
+}
+.p-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.p-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--restful);
+  margin-bottom: 14px;
+}
+.p-title {
+  font-family: 'DM Serif Display', serif;
+  font-weight: 400;
+  font-size: 27px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+  margin-bottom: 14px;
+}
+.p-body {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.65;
+  color: var(--text-2);
+  margin-bottom: 28px;
+}
+
+/* practice card */
+.p-practice {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  background: rgba(255,255,255,0.02);
+}
+.practice-idle { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.practice-meta { display: flex; flex-direction: column; gap: 2px; }
+.practice-meta > span:first-child { font-size: 15px; color: var(--text-1); }
+.practice-dur { font-size: 12px; color: var(--text-3); letter-spacing: 0.02em; }
+.practice-btn {
+  flex-shrink: 0;
+  background: var(--restful);
+  color: #0E1219;
+  border: none;
+  border-radius: 100px;
+  padding: 11px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.practice-btn:hover  { opacity: 0.9; }
+.practice-btn:active { transform: scale(0.97); }
+
+.practice-run { display: none; flex-direction: column; align-items: center; gap: 14px; padding: 6px 0; }
+.practice-run.active { display: flex; }
+.timer {
+  font-family: 'DM Serif Display', serif;
+  font-size: 44px;
+  color: var(--text-1);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.timer-track { width: 100%; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.timer-fill { height: 100%; width: 0%; background: var(--restful); border-radius: 2px; transition: width 1s linear; }
+.timer-end {
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+.timer-end:hover { color: var(--text-2); }
+.practice-settled { display: none; font-size: 12px; color: var(--text-3); letter-spacing: 0.14em; text-transform: uppercase; text-align: center; padding: 8px 0; }
+.practice-settled.active { display: block; }
+
+/* reflection */
+.p-reflect { margin-bottom: 22px; }
+.reflect-prompt {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--text-1);
+  margin-bottom: 14px;
+}
+.reflect-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.reflect-input::placeholder { color: var(--text-3); }
+.reflect-input:focus { border-color: rgba(232,168,85,0.3); }
+.reflect-save {
+  margin-top: 12px;
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 100px;
+  padding: 10px 22px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.reflect-save:hover { color: var(--text-1); border-color: rgba(255,255,255,0.22); }
+.reflect-done { display: none; align-items: center; gap: 10px; padding: 4px 0; }
+.reflect-done.active { display: flex; }
+.reflect-done-mark {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid var(--restful); color: var(--restful);
+  display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0;
+}
+.reflect-done-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; color: var(--text-1); }
+
+.p-why {
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--text-3);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 16px;
+  margin-bottom: 24px;
+}
+
+.p-again {
+  align-self: center;
+  background: transparent;
+  border: none;
+  color: var(--text-3);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  padding: 6px 12px;
+  transition: color 0.2s;
+}
+.p-again:hover { color: var(--text-2); }
+
+/* ── VOLUME CONTROL ───────────────────────────────── */
+.volume-control {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+  opacity: 0;
+  animation: fade-in-volume 1.8s ease 2s forwards;
+}
+@keyframes fade-in-volume { to { opacity: 1; } }
+.volume-icon { width: 16px; height: 16px; color: rgba(255,255,255,0.28); cursor: pointer; transition: color 0.2s ease; flex-shrink: 0; }
+.volume-icon:hover { color: rgba(255,255,255,0.55); }
+.volume-icon svg { width: 100%; height: 100%; display: block; }
+.volume-slider-wrap { width: 64px; height: 2px; background: rgba(255,255,255,0.08); border-radius: 2px; position: relative; cursor: pointer; }
+.volume-slider-fill { height: 100%; background: rgba(255,255,255,0.22); border-radius: 2px; width: 0%; pointer-events: none; transition: background 0.2s ease; }
+.volume-slider-wrap:hover .volume-slider-fill { background: rgba(232,168,85,0.5); }
+.volume-thumb { position: absolute; top: 50%; left: 0%; transform: translate(-50%, -50%) scale(0); width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.72); pointer-events: none; transition: transform 0.2s ease, background 0.2s ease; }
+.volume-slider-wrap:hover .volume-thumb { transform: translate(-50%, -50%) scale(1); background: var(--restful); }
+</style>
+</head>
+<body>
+
+<!-- ══ SCREEN 1: CHECK-IN ══ -->
+<div class="screen s-checkin" id="screenCheckin">
+  <div class="wordmark">Dhyana</div>
+
+  <div class="orb-zone">
+    <p class="prompt" id="prompt">Where are you<br><em>right now?</em></p>
+
+    <div class="orb-container" id="orbContainer">
+      <div class="orb-glow" id="orbGlow"></div>
+      <div class="orb" id="orb">
+        <canvas id="rippleCanvas"></canvas>
+      </div>
+      <div class="indicator" id="indicator"></div>
+      <span class="axis-label top">energized</span>
+      <span class="axis-label bottom">depleted</span>
+      <span class="axis-label left">stressed</span>
+      <span class="axis-label right">regulated</span>
+    </div>
+
+    <div class="hint" id="hint">touch to place yourself</div>
+    <div class="state-reveal" id="stateReveal" style="display:none;">
+      <div class="state-name" id="stateName"></div>
+      <div class="state-desc" id="stateDesc"></div>
+    </div>
+  </div>
+
+  <div class="cta-zone" id="ctaZone">
+    <button class="continue-btn" id="continueBtn">See what to do <span>→</span></button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: PROTOCOL ══ -->
+<div class="screen s-protocol hidden" id="screenProtocol">
+  <div class="p-wrap">
+    <div class="p-chip"><span class="p-dot" id="pDot"></span><span id="pState"></span></div>
+    <div class="p-eyebrow" id="pEyebrow"></div>
+    <h1 class="p-title" id="pTitle"></h1>
+    <p class="p-body" id="pBody"></p>
+
+    <div class="p-practice" id="pPractice">
+      <div class="practice-idle" id="practiceIdle">
+        <div class="practice-meta">
+          <span id="practiceLabel">Settle</span>
+          <span class="practice-dur" id="practiceDur">5 min</span>
+        </div>
+        <button class="practice-btn" id="beginBtn">Begin</button>
+      </div>
+      <div class="practice-run" id="practiceRun">
+        <div class="timer" id="timer">5:00</div>
+        <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+        <button class="timer-end" id="endBtn">I'm done</button>
+      </div>
+      <div class="practice-settled" id="practiceSettled">· settled ·</div>
+    </div>
+
+    <div class="p-reflect">
+      <div class="reflect-prompt" id="reflectPrompt"></div>
+      <textarea class="reflect-input" id="reflectInput" rows="2" placeholder="a line is enough"></textarea>
+      <button class="reflect-save" id="saveBtn">Save reflection</button>
+      <div class="reflect-done" id="reflectDone">
+        <div class="reflect-done-mark">✓</div>
+        <div class="reflect-done-text">Noticed. That's the practice.</div>
+      </div>
+    </div>
+
+    <div class="p-why" id="pWhy"></div>
+
+    <button class="p-again" id="againBtn">check in again</button>
+  </div>
+</div>
+
+<audio id="bgAudio" src="/528hz.mp3" loop preload="auto"></audio>
+
+<div class="volume-control">
+  <div class="volume-icon" id="volumeIcon" title="Toggle sound">
+    <svg id="iconMuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+    </svg>
+    <svg id="iconUnmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+    </svg>
+  </div>
+  <div class="volume-slider-wrap" id="volumeSliderWrap">
+    <div class="volume-slider-fill" id="volumeFill"></div>
+    <div class="volume-thumb" id="volumeThumb"></div>
+  </div>
+</div>
+
+<script>
+/* ── STATE MAP ── */
+const STATES = {
+  restful:   { name: 'Restful Alertness', desc: 'Calm and clear. Fully present. Ready.',    color: '#E8A855', glow: 'rgba(232,168,85,0.18)'  },
+  regulated: { name: 'Regulated',         desc: 'Steady. Functioning well.',                 color: '#6FA89A', glow: 'rgba(111,168,154,0.14)' },
+  activated: { name: 'Activated',         desc: 'Running hot. Stressed or over-driven.',     color: '#C96B5A', glow: 'rgba(201,107,90,0.16)'  },
+  depleted:  { name: 'Depleted',          desc: 'Running on empty. Heavy. Hard to start.',   color: '#5A6E8A', glow: 'rgba(90,110,138,0.15)'  },
+  dysreg:    { name: 'Dysregulated',      desc: 'Scattered. Mixed signals. Needs a reset.',  color: '#7A6880', glow: 'rgba(122,104,128,0.15)' },
+};
+
+/* ── PROTOCOLS ──
+   Content drawn from the Restoration capacity (knowledge/capstone-restoration.md),
+   generalized per knowledge/generalization.md. `practice: true` = a not-okay state
+   that gets a settling practice; okay states affirm and reflect only.
+   `why` is the honest rationale — framed as reasoning, never a clinical guarantee. */
+const PROTOCOLS = {
+  depleted: {
+    practice: true,
+    eyebrow: 'Restore',
+    title: 'Rest that actually lands',
+    body: "You're running on empty — and pushing harder won't refill it. Sit for a few minutes and let your attention settle below the busyness. No effort, nothing to fix. This is the kind of rest that reaches the nervous system, not just a pause between tasks.",
+    reflect: 'Did you rest deeply today, or only stop working?',
+    why: 'Depletion is a load the body carries over time, not just a mood — and deep rest is what discharges it. Ordinary breaks often don’t reach that far down.',
+  },
+  activated: {
+    practice: true,
+    eyebrow: 'Downshift',
+    title: 'Settle before you act',
+    body: "You're running hot. The next thing doesn't need more force — it needs a steadier you. Take a few quiet minutes first. Like drawing a bow back before the arrow flies, the pause is what gives the action its aim.",
+    reflect: 'When did you react from strain today instead of choosing?',
+    why: 'Action taken from strain tends to cost more and land worse. Settling first isn’t slower — it’s cleaner.',
+  },
+  dysreg: {
+    practice: true,
+    eyebrow: 'Reset',
+    title: 'Let the scatter settle',
+    body: "Mixed signals, pulled in two directions. This isn't the moment to decide anything important. Give yourself a few minutes of stillness and let things settle before you move.",
+    reflect: "What's pulling your attention in two directions right now?",
+    why: 'A scattered nervous system makes noisy decisions. Reset first, choose second.',
+  },
+  regulated: {
+    practice: false,
+    eyebrow: 'Sustain',
+    title: "You're steady",
+    body: "Nothing to fix here — you're functioning well. The useful move isn't more, it's noticing what's holding you here, so you can find your way back to it on a harder day.",
+    reflect: "What's working right now that's worth protecting?",
+    why: '',
+  },
+  restful: {
+    practice: false,
+    eyebrow: 'This is it',
+    title: 'Restful alertness',
+    body: "Calm, clear, fully present. This is the state everything else is trying to return to. There's nothing to add. Stay a moment longer than feels necessary, and notice how it feels from the inside — so you know the way back.",
+    reflect: 'What got you here today?',
+    why: '',
+  },
+};
+
+function classify(nx, ny) {
+  const d = Math.sqrt(nx*nx + ny*ny);
+  if (d < 0.28) return 'regulated';
+  if (ny >  0.15 && nx >  0.1)  return 'restful';
+  if (ny >  0.15 && nx < -0.1)  return 'activated';
+  if (ny < -0.15 && nx <  0)    return 'depleted';
+  if (ny < -0.15 && nx >  0)    return 'dysreg';
+  if (nx >  0.5  && Math.abs(ny) < 0.3) return 'regulated';
+  if (nx < -0.5  && Math.abs(ny) < 0.3) return 'activated';
+  return 'regulated';
+}
+
+/* ── CANVAS RIPPLE ENGINE ── */
+const canvas  = document.getElementById('rippleCanvas');
+const ctx     = canvas.getContext('2d');
+let ripples   = [];
+let rafId     = null;
+
+function resizeCanvas() {
+  const orb = document.getElementById('orb');
+  const r   = orb.getBoundingClientRect();
+  canvas.width  = r.width;
+  canvas.height = r.height;
+}
+function spawnRipple(px, py, color) {
+  const r = canvas.getBoundingClientRect();
+  ripples.push({ x: px * r.width, y: py * r.height, born: performance.now(), color });
+}
+function drawRipples(now) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const orbR = canvas.width / 2;
+  const maxR = orbR * 1.0;
+  const dur  = 1400;
+  ripples = ripples.filter(rip => {
+    const t = now - rip.born;
+    if (t > dur) return false;
+    const prog = t / dur;
+    for (let i = 0; i < 3; i++) {
+      const delay = i * 0.18;
+      const p = Math.max(0, prog - delay);
+      if (p <= 0) continue;
+      const radius = p * maxR;
+      const alpha  = Math.max(0, (1 - p) * (1 - delay) * 0.45);
+      ctx.beginPath();
+      ctx.arc(rip.x, rip.y, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = rip.color ? hexToRgba(rip.color, alpha) : `rgba(255,255,255,${alpha})`;
+      ctx.lineWidth = 1.2 - i * 0.25;
+      ctx.stroke();
+    }
+    return true;
+  });
+  if (ripples.length > 0) rafId = requestAnimationFrame(t => drawRipples(t));
+  else { rafId = null; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+}
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/* ── INTERACTION ── */
+const orbEl     = document.getElementById('orb');
+const orbGlow   = document.getElementById('orbGlow');
+const indicator = document.getElementById('indicator');
+const stateName = document.getElementById('stateName');
+const stateDesc = document.getElementById('stateDesc');
+const hint      = document.getElementById('hint');
+const stateReveal = document.getElementById('stateReveal');
+const ctaZone   = document.getElementById('ctaZone');
+
+let placed       = false;
+let currentState = null;
+
+function getCenter() {
+  const r = orbEl.getBoundingClientRect();
+  return { cx: r.left + r.width/2, cy: r.top + r.height/2, radius: r.width/2 };
+}
+function onPlace(clientX, clientY) {
+  const { cx, cy, radius } = getCenter();
+  const dx = clientX - cx, dy = clientY - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  let x = clientX, y = clientY;
+  if (dist > radius) { x = cx + (dx / dist) * radius; y = cy + (dy / dist) * radius; }
+  const r  = orbEl.getBoundingClientRect();
+  const px = (x - r.left) / r.width;
+  const py = (y - r.top)  / r.height;
+  const nx = (px - 0.5) * 2;
+  const ny = -(py - 0.5) * 2;
+
+  const key = classify(nx, ny);
+  currentState = key;
+  const state = STATES[key];
+
+  indicator.style.left = `${px * 100}%`;
+  indicator.style.top  = `${py * 100}%`;
+  indicator.classList.add('visible');
+
+  resizeCanvas();
+  spawnRipple(px, py, state.color);
+  if (!rafId) rafId = requestAnimationFrame(t => drawRipples(t));
+
+  orbGlow.style.background = `radial-gradient(circle at center, ${state.glow} 0%, transparent 70%)`;
+  stateName.style.color = state.color;
+  stateName.textContent = state.name;
+  stateDesc.textContent = state.desc;
+
+  if (!placed) {
+    placed = true;
+    hint.classList.add('hidden');
+    setTimeout(() => {
+      hint.style.display = 'none';
+      stateReveal.style.display = 'flex';
+      setTimeout(() => { stateName.classList.add('visible'); stateDesc.classList.add('visible'); }, 40);
+    }, 400);
+    setTimeout(() => { ctaZone.classList.add('visible'); }, 700);
+  } else {
+    stateName.classList.remove('visible');
+    stateDesc.classList.remove('visible');
+    requestAnimationFrame(() => setTimeout(() => {
+      stateName.classList.add('visible');
+      stateDesc.classList.add('visible');
+    }, 40));
+  }
+}
+
+orbEl.addEventListener('touchstart', e => { e.preventDefault(); const t=e.touches[0]; onPlace(t.clientX,t.clientY); }, {passive:false});
+orbEl.addEventListener('touchmove',  e => { e.preventDefault(); const t=e.touches[0]; onPlace(t.clientX,t.clientY); }, {passive:false});
+let md = false;
+orbEl.addEventListener('mousedown', e => { md=true; onPlace(e.clientX,e.clientY); });
+window.addEventListener('mousemove', e => { if(md) onPlace(e.clientX,e.clientY); });
+window.addEventListener('mouseup',   () => { md=false; });
+orbEl.addEventListener('click', e => onPlace(e.clientX,e.clientY));
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+/* ── PROTOCOL SCREEN ── */
+const screenCheckin  = document.getElementById('screenCheckin');
+const screenProtocol = document.getElementById('screenProtocol');
+
+document.getElementById('continueBtn').addEventListener('click', goToProtocol);
+
+function goToProtocol() {
+  const p = PROTOCOLS[currentState];
+  const s = STATES[currentState];
+  if (!p) return;
+
+  document.getElementById('pDot').style.background = s.color;
+  document.getElementById('pState').textContent = s.name;
+  document.getElementById('pEyebrow').textContent = p.eyebrow;
+  document.getElementById('pTitle').textContent = p.title;
+  document.getElementById('pBody').textContent = p.body;
+  document.getElementById('reflectPrompt').textContent = p.reflect;
+
+  // practice card only for not-okay states
+  document.getElementById('pPractice').style.display = p.practice ? 'block' : 'none';
+
+  // why line only when present
+  const whyEl = document.getElementById('pWhy');
+  if (p.why) { whyEl.textContent = p.why; whyEl.style.display = 'block'; }
+  else { whyEl.style.display = 'none'; }
+
+  // reset practice + reflection state
+  resetPractice();
+  document.getElementById('reflectInput').value = '';
+  document.getElementById('reflectInput').style.display = '';
+  document.getElementById('saveBtn').style.display = '';
+  document.getElementById('reflectDone').classList.remove('active');
+
+  screenCheckin.classList.add('hidden');
+  screenProtocol.classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+/* practice timer */
+let timerInt = null;
+const PRACTICE_SECONDS = 300;
+
+function fmt(s) {
+  const m = Math.floor(s / 60);
+  const ss = String(s % 60).padStart(2, '0');
+  return `${m}:${ss}`;
+}
+function resetPractice() {
+  if (timerInt) { clearInterval(timerInt); timerInt = null; }
+  document.getElementById('practiceIdle').style.display = 'flex';
+  document.getElementById('practiceRun').classList.remove('active');
+  document.getElementById('practiceSettled').classList.remove('active');
+  document.getElementById('timer').textContent = fmt(PRACTICE_SECONDS);
+  document.getElementById('timerFill').style.width = '0%';
+}
+function beginPractice() {
+  document.getElementById('practiceIdle').style.display = 'none';
+  document.getElementById('practiceRun').classList.add('active');
+  let remaining = PRACTICE_SECONDS;
+  document.getElementById('timer').textContent = fmt(remaining);
+  timerInt = setInterval(() => {
+    remaining -= 1;
+    document.getElementById('timer').textContent = fmt(Math.max(0, remaining));
+    const pct = ((PRACTICE_SECONDS - remaining) / PRACTICE_SECONDS) * 100;
+    document.getElementById('timerFill').style.width = Math.min(100, pct) + '%';
+    if (remaining <= 0) endPractice();
+  }, 1000);
+}
+function endPractice() {
+  if (timerInt) { clearInterval(timerInt); timerInt = null; }
+  document.getElementById('practiceRun').classList.remove('active');
+  document.getElementById('practiceSettled').classList.add('active');
+  document.getElementById('reflectInput').focus();
+}
+document.getElementById('beginBtn').addEventListener('click', beginPractice);
+document.getElementById('endBtn').addEventListener('click', endPractice);
+
+/* reflection save — local acknowledgment for now (storage is a later step) */
+document.getElementById('saveBtn').addEventListener('click', () => {
+  document.getElementById('reflectInput').style.display = 'none';
+  document.getElementById('saveBtn').style.display = 'none';
+  document.getElementById('reflectDone').classList.add('active');
+});
+
+document.getElementById('againBtn').addEventListener('click', () => location.reload());
+
+/* ── AUDIO + VOLUME ── */
+const audio       = document.getElementById('bgAudio');
+const volumeWrap  = document.getElementById('volumeSliderWrap');
+const volumeFill  = document.getElementById('volumeFill');
+const volumeThumb = document.getElementById('volumeThumb');
+const iconMuted   = document.getElementById('iconMuted');
+const iconUnmuted = document.getElementById('iconUnmuted');
+const volumeIcon  = document.getElementById('volumeIcon');
+
+let isMuted = false;
+let volume  = 0.10;
+audio.volume = 0.10;
+audio.muted  = false;
+
+function setVolume(v) {
+  volume = Math.max(0, Math.min(1, v));
+  audio.volume = volume;
+  const pct = volume * 100;
+  volumeFill.style.width = pct + '%';
+  volumeThumb.style.left = pct + '%';
+  if (volume === 0) mute();
+  else if (isMuted) unmute();
+}
+function unmute() {
+  isMuted = false; audio.muted = false; audio.volume = volume;
+  iconMuted.style.display = 'none'; iconUnmuted.style.display = 'block';
+  audio.play().catch(() => {});
+}
+function mute() {
+  isMuted = true; audio.muted = true;
+  iconMuted.style.display = 'block'; iconUnmuted.style.display = 'none';
+}
+volumeIcon.addEventListener('click', () => {
+  if (isMuted) { if (volume === 0) volume = 0.45; setVolume(volume); unmute(); }
+  else mute();
+});
+let dragging = false;
+function getVolumeFromEvent(e) {
+  const rect = volumeWrap.getBoundingClientRect();
+  const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+  return Math.max(0, Math.min(1, x / rect.width));
+}
+volumeWrap.addEventListener('mousedown',  e => { dragging = true; setVolume(getVolumeFromEvent(e)); });
+volumeWrap.addEventListener('touchstart', e => { dragging = true; setVolume(getVolumeFromEvent(e)); }, { passive: true });
+window.addEventListener('mousemove',  e => { if (dragging) setVolume(getVolumeFromEvent(e)); });
+window.addEventListener('touchmove',  e => { if (dragging) setVolume(getVolumeFromEvent(e)); }, { passive: true });
+window.addEventListener('mouseup',  () => { dragging = false; });
+window.addEventListener('touchend', () => { dragging = false; });
+
+setVolume(0.10);
+isMuted = true; audio.muted = true;
+iconMuted.style.display = 'block'; iconUnmuted.style.display = 'none';
+
+let autoplayUnlocked = false;
+function unlockAutoplay() {
+  if (autoplayUnlocked) return;
+  autoplayUnlocked = true;
+  isMuted = false; audio.muted = false; audio.volume = volume;
+  iconMuted.style.display = 'none'; iconUnmuted.style.display = 'block';
+  audio.play().catch(() => {});
+  document.removeEventListener('click', unlockAutoplay);
+  document.removeEventListener('touchstart', unlockAutoplay);
+}
+document.addEventListener('click',      unlockAutoplay, { once: true });
+document.addEventListener('touchstart', unlockAutoplay, { once: true });
+</script>
+</body>
+</html>
