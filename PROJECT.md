@@ -10,9 +10,18 @@ Waitlist live at dhyanaflow.com. Pre-product — protocol screen not built yet.
 Next.js + Vercel, Supabase, Resend, HTML/CSS/JS
 
 ## Key files
-- `public/index.html` — main app (orb check-in)
+- `public/index.html` — main app (orb check-in; resolves 5 states, lines ~681–688)
 - `src/app/api/subscribe/` — waitlist API
 - `public/528hz.mp3` — ambient audio
+- `knowledge/` — the content layer that powers the protocol screen (see its README)
+- `BRAND.md` — visual system + voice + Gen Z audience (derived from the live site)
+
+## Content model (how the protocol screen will work)
+Check-in state → capacity → surfaced concept / experiment / reflection.
+Knowledge is organized by human capacity, generalized away from TM/MVS-specific
+terms (`knowledge/generalization.md`). First capacity decomposed: Restoration
+(`knowledge/capstone-restoration.md`), which serves the depleted / activated /
+dysregulated states.
 
 ## Credentials
 See `/Users/tp/projects/dhyana/.env.local`
