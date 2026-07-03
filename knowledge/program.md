@@ -81,9 +81,12 @@ The source link *is* part of the evidence-honesty moat, so the bar is high. A we
 link (an EQ consultancy, a coaching blog, content marketing) actively *hurts*
 credibility — it reads as borrowed authority.
 
-**Prefer, in order:**
-1. **Primary research** — the actual study (journal via DOI, or free full-text on PMC / eScholarship / a university lab).
-2. **Top-tier institutional science communication** — UCLA / Berkeley Greater Good / university newsrooms / NIH. Accessible, but tied to real research.
+**Default to primary research** — the actual study (free full-text on PMC / a
+university lab, or the journal via DOI). This is the first choice, every time.
+
+**Top-tier institutional science is the secondary fallback** — UCLA / Berkeley
+Greater Good / university newsrooms / NIH — used only when a primary link isn't
+freely accessible. Tied to real research, but a step removed.
 
 **Avoid:** consultancies and coaching orgs (e.g. Six Seconds), generic blogs,
 Medium, company content, and mixed-quality popular outlets (e.g. Psychology Today
