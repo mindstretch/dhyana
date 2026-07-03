@@ -74,3 +74,23 @@ plug in without touching the core.
 - **Interleaved, not blocked:** dimensions rotate so the program never feels like a themed week.
 - **Consciousness held honestly:** the `traditional`-tagged days (act from stillness, expansion of happiness) are your lineage, not clinical claims — labeled as such.
 - **30, not 45:** shorter is likelier to actually finish; packs carry the rest.
+
+## Sourcing standard (the science links)
+
+The source link *is* part of the evidence-honesty moat, so the bar is high. A weak
+link (an EQ consultancy, a coaching blog, content marketing) actively *hurts*
+credibility — it reads as borrowed authority.
+
+**Prefer, in order:**
+1. **Primary research** — the actual study (journal via DOI, or free full-text on PMC / eScholarship / a university lab).
+2. **Top-tier institutional science communication** — UCLA / Berkeley Greater Good / university newsrooms / NIH. Accessible, but tied to real research.
+
+**Avoid:** consultancies and coaching orgs (e.g. Six Seconds), generic blogs,
+Medium, company content, and mixed-quality popular outlets (e.g. Psychology Today
+"basics"). If the only link is one of these, it's better to have **no link** and
+lean on the honesty tag.
+
+**Traditional / lineage practices:** no clinical link (a fake citation is worse
+than none) — or a scholarly source *on the tradition*, clearly framed as such.
+
+Every one of the 30 gets a Tier-1 or Tier-2 source, or none.
