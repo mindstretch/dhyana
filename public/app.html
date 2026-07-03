@@ -715,44 +715,83 @@ const PROGRAM = [
     done: "Named. That's the practice.",
   },
   {
-    key: 'mindful_eating',
-    category: 'Presence',
-    intention: 'Eat one thing with full attention',
-    framing: 'Pick one thing you eat or drink today and give it your whole attention.',
-    science: 'Mindful eating increases satisfaction and can shift not just how much you eat but your whole relationship with food — attention changes the experience, not only the behavior.',
+    key: 'savor_pleasure',
+    category: 'Well-being',
+    intention: 'Savor one ordinary pleasure',
+    framing: 'Pick one small good thing today and give it your full attention while it lasts.',
+    science: 'Deliberately attending to a good moment — instead of rushing past it — measurably extends the positive feeling and builds it into memory. Savoring is trainable, and it compounds.',
     scienceTag: 'moderate',
     hints: [
-      'Choose one food or drink.',
-      'Notice taste, texture, temperature — no rushing.',
-      'Write the sensations, and any feeling they brought up.',
+      'Choose one small pleasure — warmth, a taste, a song, sun on your face.',
+      'Stay with it a few breaths longer than usual.',
+      'Notice what it was like, in the body.',
     ],
     template: [
-      { placeholder: 'what you had, and how it tasted' },
-      { placeholder: 'what you felt' },
+      { placeholder: 'what you savored' },
+      { placeholder: 'what it was like to stay with it' },
     ],
     done: "Savored. That's the practice.",
   },
   {
-    key: 'three_good_things',
-    category: 'Savoring',
-    intention: 'Three good things from today',
-    framing: 'Name three things that went right — small counts.',
-    science: 'Recording what went well, and why, reliably lifts mood and builds the reserve you draw on under stress — one of the most replicated findings in positive psychology.',
-    scienceTag: 'strong',
+    key: 'expansion',
+    category: 'Consciousness',
+    intention: 'Where did life expand today?',
+    framing: 'Look back for a moment you felt more alive, more open, more yourself — not less.',
+    science: "In this tradition the natural direction of life is toward greater fullness — the “expansion of happiness.” Noticing where that actually happened trains attention toward it. A contemplative lineage, not a clinical claim.",
+    scienceTag: 'traditional',
     hints: [
-      'Recall three good moments — a coffee, a text back, an hour that went right.',
-      'For each, notice why it mattered.',
+      'Recall a moment today you felt more open or alive.',
+      'It can be tiny — a breath, a glance, a quiet.',
+      'Notice what made room for it.',
     ],
     template: [
-      { placeholder: 'good thing 1' },
-      { placeholder: 'good thing 2' },
-      { placeholder: 'good thing 3' },
+      { placeholder: 'the moment life expanded' },
+      { placeholder: 'what made room for it' },
     ],
-    done: 'Banked. Three for the library.',
+    done: "Noticed. That's the practice.",
+  },
+  {
+    key: 'reframe',
+    category: 'Resilience',
+    intention: 'Name the story, then question it',
+    framing: "When something stung today, catch the story you told about it — and check if it's the whole truth.",
+    science: 'Reappraisal — catching an automatic interpretation and testing it — is one of the most robust tools in cognitive therapy for changing how an event lands. The thought is not the fact.',
+    scienceTag: 'strong',
+    hints: [
+      'Pick one moment that stung.',
+      'Write the story your mind told about it.',
+      "Ask: is it completely true? What's a truer, kinder version?",
+    ],
+    template: [
+      { placeholder: 'the story my mind told' },
+      { placeholder: 'is it fully true?' },
+      { placeholder: 'a truer, kinder version' },
+    ],
+    done: "Reframed. That's the practice.",
+  },
+  {
+    key: 'appreciate',
+    category: 'Relationship',
+    intention: 'Appreciate one person — and tell them',
+    framing: "Bring one person to mind you're grateful for. Then actually say it to them.",
+    science: 'Expressed gratitude — not just felt — reliably strengthens relationships and lifts both people. The telling is the active ingredient; keeping it inside does much less.',
+    scienceTag: 'strong',
+    hints: [
+      'Name one person and what you appreciate about them.',
+      'Be specific — a moment, not a generality.',
+      'Then send it, say it, or plan to.',
+    ],
+    template: [
+      { placeholder: 'who, and what you appreciate' },
+      { placeholder: "how you'll tell them" },
+    ],
+    done: "Sent. That's the practice.",
   },
 ];
 
 function currentProgramDay() {
+  const q = new URLSearchParams(location.search).get('day');
+  if (q) return Math.min(PROGRAM.length, Math.max(1, parseInt(q, 10) || 1));
   let start = null;
   try { start = localStorage.getItem('dhyana_program_start'); } catch(e) {}
   if (!start) {
