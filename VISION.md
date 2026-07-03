@@ -29,27 +29,36 @@ the same model as How We Feel's Mood Meter (Brackett / Yale RULER). Evolve it wi
 (tense, wired, content, flat…). Naming precisely is itself a regulating act (RULER's
 "Labeling"; the Pause Lab's "name & rate"). Every check-in is a logged data point.
 
-### 2 · Daily practice — the 45-day program
+### 2 · Daily practice — the program (30 core + packs)
 A structured arc, in the Pause Lab's proven shape. Each day:
 - **Intention** — one themed line
 - **Scientific justification** — the *why*, grounded in the founder's corpus + real research (honesty-tagged)
 - **Writing hints** — gentle scaffolding
 - **Template** — a structured reflection that becomes data
 
-Content designed from the Pause Lab templates + the MA corpus. Practices rotate
-(an emotion-labeling backbone + themed positive-experience days: gratitude, savoring,
-flow, mindful movement, etc.).
+The **core program is 30 practices** ("Foundations"), balanced across the five
+dimensions below. Beyond it, **practice packs** extend the library — themed sets
+drawn from the corpus (e.g. Deeper Stillness, Relationships, Under Pressure, the
+Vedic set). A practice belongs to a pack; the program plays a pack's sequence.
+Content designed from the Pause Lab templates + the MA corpus (`knowledge/`).
 
 ### 3 · Define & measure progress — the spine
 This is what makes it a *development* tool, not a journal. The honest problem:
 measuring "development" is genuinely unsolved — so we do **not** fake a single
-"development score." Instead, multi-signal and honest:
-- **State trend** — over 45 days, are more days landing regulated / restful? (from the orb data)
-- **Granularity** — are you naming feelings more precisely over time? (How We Feel's own research metric; predicts wellbeing)
-- **Your dimension** — you define 1–2 things you're working on (e.g. reactivity under stress, presence) and self-rate them weekly
-- **Showing up** — did you practice? (the behavioral backbone)
+"development score." The **five dimensions** being tracked:
 
-Answered as a picture, not a number. "Am I developing?" — seen, not scored.
+| Dimension | Measured by (honest, multi-signal) |
+|---|---|
+| **Sustained well-being** | weekly self-rating · frequency of positive-state check-ins · savoring entries |
+| **Growth in consciousness** | weekly self-rating · qualitative reflection themes *(the fuzziest — held loosely)* |
+| **Reduced stress** | check-in state trend (fewer activated/depleted) · name-&-rate intensity trend · self-rating |
+| **Increased resilience** | weekly self-rating · recovery speed — how fast you return to regulated after a hard day |
+| **Improved relationship** | weekly self-rating · relational-practice entries · (later) shared practice with your partner |
+
+Plus two cross-cutting signals: **granularity** (are you naming feelings more
+precisely over time — How We Feel's validated metric) and **showing up** (did you
+practice). Well-being and stress are the most trackable; consciousness is the
+least — shown honestly, not dressed up. Answered as a **picture, not a number.**
 
 ### 4 · Shared practice — with one person
 Recreate the shared Evernote notebook, inside Dhyana. You and one other person
@@ -62,9 +71,9 @@ identity (magic-link, in-stack) + a pairing/invite + shared visibility.
 - **The founder's MA corpus** — the knowledge and scientific grounding (`knowledge/`)
 
 ## Build order (phases)
-1. **Daily practice, solo** — check-in → Day-N practice (theme, science, hints, template) → save; day tracking. *Reuses most of `/app.html`.*
-2. **The 45-day arc** — design + author the program (draft from Pause Lab + corpus; founder curates)
-3. **Define & measure progress** — setup step + the trends/insight view
+1. ✅ **Daily practice, solo** — check-in → Day-N practice (intention, science, hints, template) → save; day tracking. Live on `/app.html` (3 sample days).
+2. **The 30-practice program + packs** — design + author the core 30 across the five dimensions; pack architecture (draft from Pause Lab + corpus; founder curates). *In progress: see [knowledge/program.md](knowledge/program.md).*
+3. **Define & measure progress** — setup (baseline the five dimensions) + the trends/insight view
 4. **Shared practice** — magic-link identity, pairing, seeing each other's entries
 
 ## Honesty commitments (non-negotiable)
