@@ -463,6 +463,29 @@ body {
 .struct-input::placeholder { color: var(--text-3); }
 .struct-input:focus { border-color: rgba(232,168,85,0.3); }
 
+.struct-field { display: flex; flex-direction: column; }
+.struct-label { font-size: 12px; font-weight: 300; color: var(--text-2); margin-bottom: 9px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 100px;
+  padding: 7px 14px;
+  color: var(--text-2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.tag:hover { border-color: rgba(255,255,255,0.22); }
+.tag.selected { background: rgba(232,168,85,0.14); border-color: rgba(232,168,85,0.42); color: var(--restful); }
+.slider-wrap { display: flex; align-items: center; gap: 16px; }
+.struct-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 2px; background: rgba(255,255,255,0.14); border-radius: 2px; outline: none; }
+.struct-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--restful); cursor: pointer; }
+.struct-slider::-moz-range-thumb { width: 18px; height: 18px; border: none; border-radius: 50%; background: var(--restful); cursor: pointer; }
+.slider-out { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--restful); font-variant-numeric: tabular-nums; min-width: 22px; text-align: center; }
+
 .p-why {
   font-size: 12px;
   font-weight: 300;
@@ -693,6 +716,13 @@ const PROTOCOLS = {
    Each day: intention → scientific justification → hints → template.
    Structure from The Pause Lab; grounded in the corpus (knowledge/).
 ───────────────────────────────────────────────────────── */
+const EMOTION_TAGS = [
+  'anxious', 'tense', 'angry', 'overwhelmed', 'frustrated', 'restless',
+  'tired', 'sad', 'drained', 'flat', 'low', 'numb',
+  'calm', 'content', 'at ease', 'grateful', 'settled',
+  'alive', 'excited', 'hopeful', 'joyful', 'inspired',
+];
+
 const PROGRAM = [
   {
     key: 'name_and_rate',
@@ -708,9 +738,9 @@ const PROGRAM = [
       'Note the scene that brought it on.',
     ],
     template: [
-      { placeholder: 'the feeling — tense, wired, content, flat…' },
-      { placeholder: 'how strong? 1–9' },
-      { placeholder: 'what set it off?' },
+      { name: 'feelings', type: 'tags', label: 'Name the feeling — tap all that fit', options: EMOTION_TAGS },
+      { name: 'intensity', type: 'slider', label: 'How strong?', min: 1, max: 9 },
+      { name: 'trigger', type: 'text', placeholder: 'what set it off?' },
     ],
     done: "Named. That's the practice.",
   },
@@ -727,8 +757,8 @@ const PROGRAM = [
       'Notice what it was like, in the body.',
     ],
     template: [
-      { placeholder: 'what you savored' },
-      { placeholder: 'what it was like to stay with it' },
+      { name: 'savored', type: 'text', placeholder: 'what you savored' },
+      { name: 'experience', type: 'text', placeholder: 'what it was like to stay with it' },
     ],
     done: "Savored. That's the practice.",
   },
@@ -745,8 +775,8 @@ const PROGRAM = [
       'Notice what made room for it.',
     ],
     template: [
-      { placeholder: 'the moment life expanded' },
-      { placeholder: 'what made room for it' },
+      { name: 'moment', type: 'text', placeholder: 'the moment life expanded' },
+      { name: 'room', type: 'text', placeholder: 'what made room for it' },
     ],
     done: "Noticed. That's the practice.",
   },
@@ -763,9 +793,9 @@ const PROGRAM = [
       "Ask: is it completely true? What's a truer, kinder version?",
     ],
     template: [
-      { placeholder: 'the story my mind told' },
-      { placeholder: 'is it fully true?' },
-      { placeholder: 'a truer, kinder version' },
+      { name: 'story', type: 'text', placeholder: 'the story my mind told' },
+      { name: 'is_true', type: 'text', placeholder: 'is it fully true?' },
+      { name: 'truer', type: 'text', placeholder: 'a truer, kinder version' },
     ],
     done: "Reframed. That's the practice.",
   },
@@ -782,8 +812,8 @@ const PROGRAM = [
       'Then send it, say it, or plan to.',
     ],
     template: [
-      { placeholder: 'who, and what you appreciate' },
-      { placeholder: "how you'll tell them" },
+      { name: 'who', type: 'text', placeholder: 'who, and what you appreciate' },
+      { name: 'how', type: 'text', placeholder: "how you'll tell them" },
     ],
     done: "Sent. That's the practice.",
   },
@@ -1155,6 +1185,58 @@ document.getElementById('saveBtn').addEventListener('click', () => {
 });
 
 /* structured reflection (three good things, etc.) */
+let currentStructured = null;
+
+function renderField(wrap, f) {
+  const c = document.createElement('div');
+  c.className = 'struct-field';
+  c.setAttribute('data-field', f.name);
+  if (f.label) {
+    const lab = document.createElement('div');
+    lab.className = 'struct-label';
+    lab.textContent = f.label;
+    c.appendChild(lab);
+  }
+  const type = f.type || 'text';
+  if (type === 'tags') {
+    const row = document.createElement('div');
+    row.className = 'tag-row';
+    for (const opt of (f.options || [])) {
+      const t = document.createElement('button');
+      t.type = 'button';
+      t.className = 'tag';
+      t.setAttribute('data-tag', opt);
+      t.textContent = opt;
+      t.addEventListener('click', () => t.classList.toggle('selected'));
+      row.appendChild(t);
+    }
+    c.appendChild(row);
+  } else if (type === 'slider') {
+    const min = f.min || 1, max = f.max || 9;
+    const sw = document.createElement('div');
+    sw.className = 'slider-wrap';
+    const range = document.createElement('input');
+    range.type = 'range'; range.min = min; range.max = max; range.step = 1;
+    range.value = f.default != null ? f.default : Math.round((min + max) / 2);
+    range.className = 'struct-slider';
+    const out = document.createElement('span');
+    out.className = 'slider-out';
+    out.textContent = range.value;
+    range.addEventListener('input', () => { out.textContent = range.value; });
+    sw.appendChild(range);
+    sw.appendChild(out);
+    c.appendChild(sw);
+  } else {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'struct-input';
+    inp.placeholder = f.placeholder || '';
+    inp.maxLength = 200;
+    c.appendChild(inp);
+  }
+  wrap.appendChild(c);
+}
+
 function buildStructured(cfg) {
   const promptEl = document.getElementById('structPrompt');
   promptEl.textContent = cfg.prompt || '';
@@ -1164,20 +1246,14 @@ function buildStructured(cfg) {
   else { hintEl.style.display = 'none'; }
   const wrap = document.getElementById('structFields');
   wrap.innerHTML = '';
-  const fields = cfg.template || Array.from({ length: cfg.fields || 3 }, () => ({ placeholder: cfg.placeholder || '' }));
-  for (const f of fields) {
-    const inp = document.createElement('input');
-    inp.type = 'text';
-    inp.className = 'struct-input';
-    inp.placeholder = f.placeholder || '';
-    inp.maxLength = 160;
-    wrap.appendChild(inp);
-  }
+  const base = cfg.template || Array.from({ length: cfg.fields || 3 }, () => ({ type: 'text', placeholder: cfg.placeholder || '' }));
+  const fields = base.map((f, i) => ({ ...f, name: f.name || ('field_' + (i + 1)) }));
+  fields.forEach(f => renderField(wrap, f));
+  currentStructured = { key: cfg.key || 'structured', fields };
   wrap.style.display = 'flex';
   document.getElementById('structSaveBtn').style.display = '';
   document.getElementById('structDone').classList.remove('active');
   document.getElementById('structDoneText').textContent = cfg.done || 'Saved.';
-  document.getElementById('reflectStructured').dataset.key = cfg.key || 'structured';
 }
 
 async function saveStructured(data, text) {
@@ -1192,10 +1268,30 @@ async function saveStructured(data, text) {
 }
 
 document.getElementById('structSaveBtn').addEventListener('click', () => {
-  const items = [...document.querySelectorAll('#structFields .struct-input')]
-    .map(i => i.value.trim()).filter(Boolean);
-  const key = document.getElementById('reflectStructured').dataset.key || 'structured';
-  saveStructured({ key, items }, items.join(' · '));
+  if (!currentStructured) return;
+  const data = {};
+  const parts = [];
+  for (const f of currentStructured.fields) {
+    const c = document.querySelector('#structFields [data-field="' + f.name + '"]');
+    if (!c) continue;
+    const type = f.type || 'text';
+    if (type === 'tags') {
+      const sel = [...c.querySelectorAll('.tag.selected')].map(t => t.getAttribute('data-tag'));
+      data[f.name] = sel;
+      if (sel.length) parts.push(sel.join(', '));
+    } else if (type === 'slider') {
+      const r = c.querySelector('input[type="range"]');
+      const v = r ? Number(r.value) : null;
+      data[f.name] = v;
+      if (v != null) parts.push(v + '/' + (f.max || 9));
+    } else {
+      const inp = c.querySelector('input[type="text"]');
+      const v = inp ? inp.value.trim() : '';
+      data[f.name] = v;
+      if (v) parts.push(v);
+    }
+  }
+  saveStructured({ key: currentStructured.key, fields: data }, parts.join(' · '));
   document.getElementById('structFields').style.display = 'none';
   document.getElementById('structHint').style.display = 'none';
   document.getElementById('structSaveBtn').style.display = 'none';
