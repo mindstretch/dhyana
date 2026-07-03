@@ -323,8 +323,22 @@ body {
   font-weight: 300;
   line-height: 1.65;
   color: var(--text-2);
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
+
+.p-science {
+  border-left: 2px solid rgba(232,168,85,0.4);
+  padding: 2px 0 2px 16px;
+  margin-bottom: 22px;
+}
+.p-science-head { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.p-science-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--restful); }
+.p-science-tag { font-size: 10px; letter-spacing: 0.06em; color: var(--text-3); }
+.p-science-body { font-size: 13.5px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.62); }
+
+.p-hints { margin-bottom: 24px; display: flex; flex-direction: column; gap: 7px; }
+.p-hint { font-size: 13px; font-weight: 300; line-height: 1.45; color: var(--text-3); padding-left: 14px; position: relative; }
+.p-hint::before { content: '—'; position: absolute; left: 0; color: rgba(255,255,255,0.22); }
 
 /* practice card */
 .p-practice {
@@ -526,7 +540,7 @@ body {
   </div>
 
   <div class="cta-zone" id="ctaZone">
-    <button class="continue-btn" id="continueBtn">See what to do <span>→</span></button>
+    <button class="continue-btn" id="continueBtn">Today's practice <span>→</span></button>
   </div>
 </div>
 
@@ -537,6 +551,13 @@ body {
     <div class="p-eyebrow" id="pEyebrow"></div>
     <h1 class="p-title" id="pTitle"></h1>
     <p class="p-body" id="pBody"></p>
+
+    <div class="p-science" id="pScience" style="display:none;">
+      <div class="p-science-head"><span class="p-science-label">The science</span><span class="p-science-tag" id="pScienceTag"></span></div>
+      <div class="p-science-body" id="pScienceBody"></div>
+    </div>
+
+    <div class="p-hints" id="pHints" style="display:none;"></div>
 
     <div class="p-practice" id="pPractice">
       <div class="practice-idle" id="practiceIdle">
@@ -666,6 +687,81 @@ const PROTOCOLS = {
     why: '',
   },
 };
+
+/* ─────────────────────────────────────────────────────────
+   PROGRAM — the 45-day practice (first days authored; see VISION.md)
+   Each day: intention → scientific justification → hints → template.
+   Structure from The Pause Lab; grounded in the corpus (knowledge/).
+───────────────────────────────────────────────────────── */
+const PROGRAM = [
+  {
+    key: 'name_and_rate',
+    category: 'Emotional awareness',
+    intention: 'Name and rate what you feel',
+    framing: "Start by getting specific about what's actually here — not the vague “fine,” the real thing.",
+    science: "Putting a feeling into words and rating its intensity engages the brain's regulatory systems and measurably lowers its charge — “name it to tame it.” Naming precisely is itself a form of regulation.",
+    scienceTag: 'strong',
+    hints: [
+      'Recall the emotions you moved through today.',
+      'Name each as precisely as you can.',
+      "Rate how strong it felt, 1–9. There's no right answer.",
+      'Note the scene that brought it on.',
+    ],
+    template: [
+      { placeholder: 'the feeling — tense, wired, content, flat…' },
+      { placeholder: 'how strong? 1–9' },
+      { placeholder: 'what set it off?' },
+    ],
+    done: "Named. That's the practice.",
+  },
+  {
+    key: 'mindful_eating',
+    category: 'Presence',
+    intention: 'Eat one thing with full attention',
+    framing: 'Pick one thing you eat or drink today and give it your whole attention.',
+    science: 'Mindful eating increases satisfaction and can shift not just how much you eat but your whole relationship with food — attention changes the experience, not only the behavior.',
+    scienceTag: 'moderate',
+    hints: [
+      'Choose one food or drink.',
+      'Notice taste, texture, temperature — no rushing.',
+      'Write the sensations, and any feeling they brought up.',
+    ],
+    template: [
+      { placeholder: 'what you had, and how it tasted' },
+      { placeholder: 'what you felt' },
+    ],
+    done: "Savored. That's the practice.",
+  },
+  {
+    key: 'three_good_things',
+    category: 'Savoring',
+    intention: 'Three good things from today',
+    framing: 'Name three things that went right — small counts.',
+    science: 'Recording what went well, and why, reliably lifts mood and builds the reserve you draw on under stress — one of the most replicated findings in positive psychology.',
+    scienceTag: 'strong',
+    hints: [
+      'Recall three good moments — a coffee, a text back, an hour that went right.',
+      'For each, notice why it mattered.',
+    ],
+    template: [
+      { placeholder: 'good thing 1' },
+      { placeholder: 'good thing 2' },
+      { placeholder: 'good thing 3' },
+    ],
+    done: 'Banked. Three for the library.',
+  },
+];
+
+function currentProgramDay() {
+  let start = null;
+  try { start = localStorage.getItem('dhyana_program_start'); } catch(e) {}
+  if (!start) {
+    start = new Date().toISOString().slice(0, 10);
+    try { localStorage.setItem('dhyana_program_start', start); } catch(e) {}
+  }
+  const days = Math.floor((Date.now() - new Date(start + 'T00:00:00').getTime()) / 86400000);
+  return Math.min(PROGRAM.length, Math.max(1, days + 1));
+}
 
 function classify(nx, ny) {
   const d = Math.sqrt(nx*nx + ny*ny);
@@ -822,13 +918,13 @@ function getDeviceId() {
 const DEVICE_ID = getDeviceId();
 let currentCheckinId = null;
 
-async function saveCheckin(state) {
+async function saveCheckin(state, day) {
   currentCheckinId = null;
   try {
     const r = await fetch('/api/checkin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ device_id: DEVICE_ID, state })
+      body: JSON.stringify({ device_id: DEVICE_ID, state, program_day: day || null })
     });
     if (r.ok) { const d = await r.json(); currentCheckinId = d.id || null; }
   } catch(e) { /* offline / local preview — fail quietly */ }
@@ -874,7 +970,7 @@ async function loadWelcome() {
 }
 loadWelcome();
 
-document.getElementById('continueBtn').addEventListener('click', goToProtocol);
+document.getElementById('continueBtn').addEventListener('click', goToDayPractice);
 
 function goToProtocol() {
   const p = PROTOCOLS[currentState];
@@ -914,6 +1010,57 @@ function goToProtocol() {
   }
 
   saveCheckin(currentState);
+
+  screenCheckin.classList.add('hidden');
+  screenProtocol.classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+/* Program flow: check-in (feeling logged) → today's Day-N practice */
+function goToDayPractice() {
+  const dayNum = currentProgramDay();
+  const day = PROGRAM[dayNum - 1];
+  if (!day) return;
+  const s = STATES[currentState];
+
+  document.getElementById('pDot').style.background = s ? s.color : 'var(--restful)';
+  document.getElementById('pState').textContent = 'Day ' + dayNum + (s ? ' · ' + s.name.toLowerCase() : '');
+  document.getElementById('pEyebrow').textContent = day.category || '';
+  document.getElementById('pTitle').textContent = day.intention || '';
+
+  const bodyEl = document.getElementById('pBody');
+  if (day.framing) { bodyEl.textContent = day.framing; bodyEl.style.display = ''; }
+  else { bodyEl.style.display = 'none'; }
+
+  const sci = document.getElementById('pScience');
+  if (day.science) {
+    document.getElementById('pScienceBody').textContent = day.science;
+    document.getElementById('pScienceTag').textContent = day.scienceTag || '';
+    sci.style.display = 'block';
+  } else { sci.style.display = 'none'; }
+
+  const hintsEl = document.getElementById('pHints');
+  hintsEl.innerHTML = '';
+  if (day.hints && day.hints.length) {
+    for (const h of day.hints) {
+      const el = document.createElement('div');
+      el.className = 'p-hint';
+      el.textContent = h;
+      hintsEl.appendChild(el);
+    }
+    hintsEl.style.display = 'flex';
+  } else { hintsEl.style.display = 'none'; }
+
+  // program days have no timer; reflection is the practice
+  document.getElementById('pPractice').style.display = 'none';
+  document.getElementById('pWhy').style.display = 'none';
+  resetPractice();
+
+  document.getElementById('reflectFree').style.display = 'none';
+  document.getElementById('reflectStructured').style.display = 'block';
+  buildStructured({ template: day.template, done: day.done, key: day.key });
+
+  saveCheckin(currentState, dayNum);
 
   screenCheckin.classList.add('hidden');
   screenProtocol.classList.remove('hidden');
@@ -970,17 +1117,20 @@ document.getElementById('saveBtn').addEventListener('click', () => {
 
 /* structured reflection (three good things, etc.) */
 function buildStructured(cfg) {
-  document.getElementById('structPrompt').textContent = cfg.prompt;
+  const promptEl = document.getElementById('structPrompt');
+  promptEl.textContent = cfg.prompt || '';
+  promptEl.style.display = cfg.prompt ? '' : 'none';
   const hintEl = document.getElementById('structHint');
   if (cfg.hint) { hintEl.textContent = cfg.hint; hintEl.style.display = 'block'; }
   else { hintEl.style.display = 'none'; }
   const wrap = document.getElementById('structFields');
   wrap.innerHTML = '';
-  for (let i = 0; i < (cfg.fields || 3); i++) {
+  const fields = cfg.template || Array.from({ length: cfg.fields || 3 }, () => ({ placeholder: cfg.placeholder || '' }));
+  for (const f of fields) {
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.className = 'struct-input';
-    inp.placeholder = cfg.placeholder || '';
+    inp.placeholder = f.placeholder || '';
     inp.maxLength = 160;
     wrap.appendChild(inp);
   }

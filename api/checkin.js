@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'POST') {
-      const { id, device_id, state, reflection, reflection_data } = req.body || {};
+      const { id, device_id, state, reflection, reflection_data, program_day } = req.body || {};
 
       // ── Attach a reflection (free-text and/or structured) to an existing check-in ──
       if (id) {
@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
       const r = await fetch(base, {
         method: 'POST',
         headers: { ...headers, Prefer: 'return=representation' },
-        body: JSON.stringify({ device_id, state, reflection: reflection ?? null }),
+        body: JSON.stringify({ device_id, state, program_day: program_day ?? null, reflection: reflection ?? null }),
       });
       if (!r.ok) { console.error('Supabase insert error:', await r.text()); return res.status(500).json({ error: 'Save failed' }); }
       const rows = await r.json();
