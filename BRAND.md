@@ -131,3 +131,35 @@ meets you where you are.**
 - Streaks, badges, push-notification guilt, "you missed a day."
 - Guru imagery, lotus clip-art, Sanskrit-as-vibe, incense mysticism.
 - Overclaiming evidence to sound impressive. Honesty is the brand.
+
+---
+
+## The How We Feel benchmark — borrow the feeling, not the look
+
+How We Feel (Yale RULER / Marc Brackett; App Store Cultural Impact Award, 4.9★) is
+the closest reference for the *feeling* Dhyana's check-in should give. Its core is
+the Mood Meter — a valence × energy grid — which **is our orb**. But its aesthetic
+is bright, warm, daytime, color-flooded; ours is dark, spare, contemplative.
+**Borrow the feeling, not the look.**
+
+### What creates its feeling — and how Dhyana delivers each, in the dark
+
+| Their driver | Dhyana's version |
+|---|---|
+| **No feeling is "bad"** — emotions are signals, met without judgment | Every state is met without shame; *depleted is never failure*. Non-judgment lives in the copy and in the fact that every check-in leads somewhere kind. |
+| **Granularity as empowerment** — 144 precise emotion words; you can add your own | Our emotion tags — expand the vocabulary, group by affect zone (subtle color tint), let the user **add their own word**. The single biggest borrow. |
+| **Insight → agency** — trends/infographics reveal patterns | The report/history view — state over time, tag frequencies, intensity trend — as **dark, restrained data-viz** (Oura/Stripe at night), never bright charts. The biggest gap today. |
+| **Frictionless** — 2–5 min, few taps | Keep the check-in fast. Never over-ask. |
+| **Color = emotion** | The state color already tints the orb glow. Extend it as a quiet session accent — never a flood. |
+| **Warm, not clinical; calm, not cute** | Warmth through voice + gentle motion (the breathing orb, soft settles), never bright color or mascots. |
+| **Private & trustworthy** — nonprofit, no ads | The user owns their data. No gamification. Say it plainly. |
+
+### The one-line principle
+How We Feel is a **bright, friendly, daytime** tool. Dhyana gives the same
+emotional safety, granularity, and insight in a **dark, contemplative, night**
+register. *Same feeling, different hour.*
+
+### Concrete design moves (priority order)
+1. **The insight view** — the report as dark data-viz: state arc, most-named feelings, intensity line, minutes sat. This is the "agency" payoff and the biggest gap.
+2. **Enrich the emotion tags** — more words, zone-grouped with subtle color, "+ add your own."
+3. **Non-judgment micro-copy** — one line at check-in that signals every feeling is welcome.
