@@ -430,6 +430,25 @@ body {
 }
 .reflect-done-text { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; color: var(--text-1); }
 
+/* structured reflection (e.g. three good things) */
+.struct-hint { font-size: 12.5px; font-weight: 300; color: var(--text-3); line-height: 1.5; margin-bottom: 14px; }
+.struct-fields { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+.struct-input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text-1);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.struct-input::placeholder { color: var(--text-3); }
+.struct-input:focus { border-color: rgba(232,168,85,0.3); }
+
 .p-why {
   font-size: 12px;
   font-weight: 300;
@@ -535,13 +554,24 @@ body {
       <div class="practice-settled" id="practiceSettled">· settled ·</div>
     </div>
 
-    <div class="p-reflect">
+    <div class="p-reflect" id="reflectFree">
       <div class="reflect-prompt" id="reflectPrompt"></div>
       <textarea class="reflect-input" id="reflectInput" rows="2" placeholder="a line is enough"></textarea>
       <button class="reflect-save" id="saveBtn">Save reflection</button>
       <div class="reflect-done" id="reflectDone">
         <div class="reflect-done-mark">✓</div>
         <div class="reflect-done-text">Noticed. That's the practice.</div>
+      </div>
+    </div>
+
+    <div class="p-reflect" id="reflectStructured" style="display:none;">
+      <div class="reflect-prompt" id="structPrompt"></div>
+      <div class="struct-hint" id="structHint"></div>
+      <div class="struct-fields" id="structFields"></div>
+      <button class="reflect-save" id="structSaveBtn">Save</button>
+      <div class="reflect-done" id="structDone">
+        <div class="reflect-done-mark">✓</div>
+        <div class="reflect-done-text" id="structDoneText">Banked.</div>
       </div>
     </div>
 
@@ -615,8 +645,16 @@ const PROTOCOLS = {
     practice: false,
     eyebrow: 'Sustain',
     title: "You're steady",
-    body: "Nothing to fix here — you're functioning well. The useful move isn't more, it's noticing what's holding you here, so you can find your way back to it on a harder day.",
-    reflect: "What's working right now that's worth protecting?",
+    body: "Nothing to fix — you're functioning well. So instead of fixing, bank it. Naming what's good, while you're already steady, builds the reserve you draw on when you're not.",
+    reflect: null,
+    structured: {
+      key: 'three_good_things',
+      prompt: 'Three good things from today',
+      hint: 'Small counts — a good coffee, a text back, an hour that went right.',
+      fields: 3,
+      placeholder: 'something good…',
+      done: 'Banked. Three for the library.',
+    },
     why: '',
   },
   restful: {
@@ -848,8 +886,6 @@ function goToProtocol() {
   document.getElementById('pEyebrow').textContent = p.eyebrow;
   document.getElementById('pTitle').textContent = p.title;
   document.getElementById('pBody').textContent = p.body;
-  document.getElementById('reflectPrompt').textContent = p.reflect;
-
   // practice card only for not-okay states
   document.getElementById('pPractice').style.display = p.practice ? 'block' : 'none';
 
@@ -858,12 +894,24 @@ function goToProtocol() {
   if (p.why) { whyEl.textContent = p.why; whyEl.style.display = 'block'; }
   else { whyEl.style.display = 'none'; }
 
-  // reset practice + reflection state
   resetPractice();
-  document.getElementById('reflectInput').value = '';
-  document.getElementById('reflectInput').style.display = '';
-  document.getElementById('saveBtn').style.display = '';
-  document.getElementById('reflectDone').classList.remove('active');
+
+  // reflection: structured (e.g. three good things) or free-text
+  const freeEl = document.getElementById('reflectFree');
+  const structEl = document.getElementById('reflectStructured');
+  if (p.structured) {
+    freeEl.style.display = 'none';
+    structEl.style.display = 'block';
+    buildStructured(p.structured);
+  } else {
+    structEl.style.display = 'none';
+    freeEl.style.display = 'block';
+    document.getElementById('reflectPrompt').textContent = p.reflect || '';
+    document.getElementById('reflectInput').value = '';
+    document.getElementById('reflectInput').style.display = '';
+    document.getElementById('saveBtn').style.display = '';
+    document.getElementById('reflectDone').classList.remove('active');
+  }
 
   saveCheckin(currentState);
 
@@ -918,6 +966,51 @@ document.getElementById('saveBtn').addEventListener('click', () => {
   document.getElementById('reflectInput').style.display = 'none';
   document.getElementById('saveBtn').style.display = 'none';
   document.getElementById('reflectDone').classList.add('active');
+});
+
+/* structured reflection (three good things, etc.) */
+function buildStructured(cfg) {
+  document.getElementById('structPrompt').textContent = cfg.prompt;
+  const hintEl = document.getElementById('structHint');
+  if (cfg.hint) { hintEl.textContent = cfg.hint; hintEl.style.display = 'block'; }
+  else { hintEl.style.display = 'none'; }
+  const wrap = document.getElementById('structFields');
+  wrap.innerHTML = '';
+  for (let i = 0; i < (cfg.fields || 3); i++) {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'struct-input';
+    inp.placeholder = cfg.placeholder || '';
+    inp.maxLength = 160;
+    wrap.appendChild(inp);
+  }
+  wrap.style.display = 'flex';
+  document.getElementById('structSaveBtn').style.display = '';
+  document.getElementById('structDone').classList.remove('active');
+  document.getElementById('structDoneText').textContent = cfg.done || 'Saved.';
+  document.getElementById('reflectStructured').dataset.key = cfg.key || 'structured';
+}
+
+async function saveStructured(data, text) {
+  if (!currentCheckinId) return;
+  try {
+    await fetch('/api/checkin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: currentCheckinId, reflection: text, reflection_data: data })
+    });
+  } catch(e) { /* fail quietly */ }
+}
+
+document.getElementById('structSaveBtn').addEventListener('click', () => {
+  const items = [...document.querySelectorAll('#structFields .struct-input')]
+    .map(i => i.value.trim()).filter(Boolean);
+  const key = document.getElementById('reflectStructured').dataset.key || 'structured';
+  saveStructured({ key, items }, items.join(' · '));
+  document.getElementById('structFields').style.display = 'none';
+  document.getElementById('structHint').style.display = 'none';
+  document.getElementById('structSaveBtn').style.display = 'none';
+  document.getElementById('structDone').classList.add('active');
 });
 
 document.getElementById('againBtn').addEventListener('click', () => location.reload());

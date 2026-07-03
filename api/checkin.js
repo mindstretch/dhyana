@@ -28,21 +28,24 @@ module.exports = async (req, res) => {
       if (!deviceId) return res.status(400).json({ error: 'device_id required' });
 
       const url = `${base}?device_id=eq.${encodeURIComponent(deviceId)}`
-        + `&order=created_at.desc&limit=20&select=id,state,reflection,created_at`;
+        + `&order=created_at.desc&limit=20&select=id,state,reflection,reflection_data,created_at`;
       const r = await fetch(url, { headers });
       if (!r.ok) { console.error('Supabase read error:', await r.text()); return res.status(500).json({ error: 'Read failed' }); }
       return res.status(200).json({ checkins: await r.json() });
     }
 
     if (req.method === 'POST') {
-      const { id, device_id, state, reflection } = req.body || {};
+      const { id, device_id, state, reflection, reflection_data } = req.body || {};
 
-      // ── Attach a reflection to an existing check-in ──
+      // ── Attach a reflection (free-text and/or structured) to an existing check-in ──
       if (id) {
+        const patch = {};
+        if (reflection !== undefined)      patch.reflection = reflection ?? null;
+        if (reflection_data !== undefined) patch.reflection_data = reflection_data ?? null;
         const r = await fetch(`${base}?id=eq.${encodeURIComponent(id)}`, {
           method: 'PATCH',
           headers: { ...headers, Prefer: 'return=minimal' },
-          body: JSON.stringify({ reflection: reflection ?? null }),
+          body: JSON.stringify(patch),
         });
         if (!r.ok) { console.error('Supabase update error:', await r.text()); return res.status(500).json({ error: 'Update failed' }); }
         return res.status(200).json({ success: true });
