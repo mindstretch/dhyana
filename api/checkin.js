@@ -35,13 +35,14 @@ module.exports = async (req, res) => {
     }
 
     if (req.method === 'POST') {
-      const { id, device_id, state, reflection, reflection_data, program_day } = req.body || {};
+      const { id, device_id, state, reflection, reflection_data, program_day, meditation_seconds } = req.body || {};
 
-      // ── Attach a reflection (free-text and/or structured) to an existing check-in ──
+      // ── Attach a reflection / meditation to an existing check-in ──
       if (id) {
         const patch = {};
-        if (reflection !== undefined)      patch.reflection = reflection ?? null;
-        if (reflection_data !== undefined) patch.reflection_data = reflection_data ?? null;
+        if (reflection !== undefined)         patch.reflection = reflection ?? null;
+        if (reflection_data !== undefined)    patch.reflection_data = reflection_data ?? null;
+        if (meditation_seconds !== undefined) patch.meditation_seconds = meditation_seconds ?? null;
         const r = await fetch(`${base}?id=eq.${encodeURIComponent(id)}`, {
           method: 'PATCH',
           headers: { ...headers, Prefer: 'return=minimal' },

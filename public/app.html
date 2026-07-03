@@ -340,6 +340,42 @@ body {
 .p-hint { font-size: 13px; font-weight: 300; line-height: 1.45; color: var(--text-3); padding-left: 14px; position: relative; }
 .p-hint::before { content: '—'; position: absolute; left: 0; color: rgba(255,255,255,0.22); }
 
+.p-science-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--restful);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232,168,85,0.3);
+  padding-bottom: 1px;
+}
+.p-science-link:hover { border-bottom-color: rgba(232,168,85,0.7); }
+
+/* ── MEDITATION ─────────────────────────────────── */
+.p-med { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 22px; margin-bottom: 24px; }
+.p-med-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--restful); margin-bottom: 16px; text-align: center; }
+.p-med-idle { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.med-durs { display: flex; align-items: center; gap: 10px; }
+.med-dur {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10);
+  color: var(--text-2); font-family: 'DM Sans', sans-serif; font-size: 15px; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.med-dur:hover { border-color: rgba(255,255,255,0.22); }
+.med-dur.selected { background: rgba(232,168,85,0.14); border-color: rgba(232,168,85,0.42); color: var(--restful); }
+.med-unit { font-size: 12px; color: var(--text-3); margin-left: 2px; }
+.med-begin {
+  background: var(--restful); color: #0E1219; border: none; border-radius: 100px;
+  padding: 11px 30px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.med-begin:hover { opacity: 0.9; }
+.med-begin:active { transform: scale(0.97); }
+.p-med-run { flex-direction: column; align-items: center; gap: 14px; }
+.med-timer { font-family: 'DM Serif Display', serif; font-size: 46px; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.p-med-done { font-size: 12px; color: var(--text-3); letter-spacing: 0.16em; text-transform: uppercase; text-align: center; }
+
 /* practice card */
 .p-practice {
   border: 1px solid rgba(255,255,255,0.08);
@@ -578,6 +614,7 @@ body {
     <div class="p-science" id="pScience" style="display:none;">
       <div class="p-science-head"><span class="p-science-label">The science</span><span class="p-science-tag" id="pScienceTag"></span></div>
       <div class="p-science-body" id="pScienceBody"></div>
+      <a class="p-science-link" id="pScienceLink" target="_blank" rel="noopener" style="display:none;"></a>
     </div>
 
     <div class="p-hints" id="pHints" style="display:none;"></div>
@@ -617,6 +654,25 @@ body {
         <div class="reflect-done-mark">✓</div>
         <div class="reflect-done-text" id="structDoneText">Banked.</div>
       </div>
+    </div>
+
+    <div class="p-med" id="pMeditation" style="display:none;">
+      <div class="p-med-label">Close with a sit</div>
+      <div class="p-med-idle" id="medIdle">
+        <div class="med-durs" id="medDurs">
+          <button class="med-dur" type="button" data-min="5">5</button>
+          <button class="med-dur selected" type="button" data-min="10">10</button>
+          <button class="med-dur" type="button" data-min="20">20</button>
+          <span class="med-unit">min</span>
+        </div>
+        <button class="med-begin" id="medBegin" type="button">Begin</button>
+      </div>
+      <div class="p-med-run" id="medRun" style="display:none;">
+        <div class="med-timer" id="medTimer">10:00</div>
+        <div class="timer-track"><div class="timer-fill" id="medFill"></div></div>
+        <button class="timer-end" id="medEnd" type="button">End</button>
+      </div>
+      <div class="p-med-done" id="medDone" style="display:none;">· settled ·</div>
     </div>
 
     <div class="p-why" id="pWhy"></div>
@@ -731,6 +787,7 @@ const PROGRAM = [
     framing: "Start by getting specific about what's actually here — not the vague “fine,” the real thing.",
     science: "Putting a feeling into words and rating its intensity engages the brain's regulatory systems and measurably lowers its charge — “name it to tame it.” Naming precisely is itself a form of regulation.",
     scienceTag: 'strong',
+    source: { title: 'Affect labeling — Six Seconds', url: 'https://www.6seconds.org/2021/01/08/naming-emotions-affect-labeling-emotional-intelligence/' },
     hints: [
       'Recall the emotions you moved through today.',
       'Name each as precisely as you can.',
@@ -751,6 +808,7 @@ const PROGRAM = [
     framing: 'Pick one small good thing today and give it your full attention while it lasts.',
     science: 'Deliberately attending to a good moment — instead of rushing past it — measurably extends the positive feeling and builds it into memory. Savoring is trainable, and it compounds.',
     scienceTag: 'moderate',
+    source: { title: '10 Steps to Savoring — Greater Good', url: 'https://greatergood.berkeley.edu/article/item/10_steps_to_savoring_the_good_things_in_life' },
     hints: [
       'Choose one small pleasure — warmth, a taste, a song, sun on your face.',
       'Stay with it a few breaths longer than usual.',
@@ -787,6 +845,7 @@ const PROGRAM = [
     framing: "When something stung today, catch the story you told about it — and check if it's the whole truth.",
     science: 'Reappraisal — catching an automatic interpretation and testing it — is one of the most robust tools in cognitive therapy for changing how an event lands. The thought is not the fact.',
     scienceTag: 'strong',
+    source: { title: 'Cognitive reappraisal — Psychology Today', url: 'https://www.psychologytoday.com/us/basics/cognitive-reappraisal' },
     hints: [
       'Pick one moment that stung.',
       'Write the story your mind told about it.',
@@ -806,6 +865,7 @@ const PROGRAM = [
     framing: "Bring one person to mind you're grateful for. Then actually say it to them.",
     science: 'Expressed gratitude — not just felt — reliably strengthens relationships and lifts both people. The telling is the active ingredient; keeping it inside does much less.',
     scienceTag: 'strong',
+    source: { title: 'The Ripple Effects of a Thank You — Greater Good', url: 'https://greatergood.berkeley.edu/article/item/the_ripple_effects_of_a_thank_you' },
     hints: [
       'Name one person and what you appreciate about them.',
       'Be specific — a moment, not a generality.',
@@ -1105,8 +1165,16 @@ function goToDayPractice() {
   if (day.science) {
     document.getElementById('pScienceBody').textContent = day.science;
     document.getElementById('pScienceTag').textContent = day.scienceTag || '';
+    const link = document.getElementById('pScienceLink');
+    if (day.source && day.source.url) {
+      link.textContent = '→ ' + (day.source.title || 'read the research');
+      link.href = day.source.url;
+      link.style.display = 'inline-block';
+    } else { link.style.display = 'none'; }
     sci.style.display = 'block';
   } else { sci.style.display = 'none'; }
+
+  document.getElementById('pMeditation').style.display = 'none';
 
   const hintsEl = document.getElementById('pHints');
   hintsEl.innerHTML = '';
@@ -1296,7 +1364,66 @@ document.getElementById('structSaveBtn').addEventListener('click', () => {
   document.getElementById('structHint').style.display = 'none';
   document.getElementById('structSaveBtn').style.display = 'none';
   document.getElementById('structDone').classList.add('active');
+  revealMeditation();
 });
+
+/* ── MEDITATION (closing sit) ── */
+let medMin = 10, medInt = null, medRemaining = 0, medTotal = 0;
+
+function selectMedDur(min) {
+  medMin = min;
+  document.querySelectorAll('#medDurs .med-dur').forEach(b =>
+    b.classList.toggle('selected', Number(b.dataset.min) === min));
+  document.getElementById('medTimer').textContent = fmt(min * 60);
+}
+document.querySelectorAll('#medDurs .med-dur').forEach(b =>
+  b.addEventListener('click', () => selectMedDur(Number(b.dataset.min))));
+
+function revealMeditation() {
+  document.getElementById('pMeditation').style.display = 'block';
+  document.getElementById('medIdle').style.display = 'flex';
+  document.getElementById('medRun').style.display = 'none';
+  document.getElementById('medDone').style.display = 'none';
+  selectMedDur(medMin);
+}
+
+function beginMed() {
+  document.getElementById('medIdle').style.display = 'none';
+  document.getElementById('medRun').style.display = 'flex';
+  medTotal = medMin * 60;
+  medRemaining = medTotal;
+  document.getElementById('medTimer').textContent = fmt(medRemaining);
+  document.getElementById('medFill').style.width = '0%';
+  medInt = setInterval(() => {
+    medRemaining -= 1;
+    document.getElementById('medTimer').textContent = fmt(Math.max(0, medRemaining));
+    document.getElementById('medFill').style.width =
+      Math.min(100, ((medTotal - medRemaining) / medTotal) * 100) + '%';
+    if (medRemaining <= 0) endMed();
+  }, 1000);
+}
+
+function endMed() {
+  if (medInt) { clearInterval(medInt); medInt = null; }
+  const elapsed = medTotal - Math.max(0, medRemaining);
+  document.getElementById('medRun').style.display = 'none';
+  document.getElementById('medDone').style.display = 'block';
+  saveMeditation(elapsed);
+}
+
+async function saveMeditation(seconds) {
+  if (!currentCheckinId || !seconds) return;
+  try {
+    await fetch('/api/checkin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: currentCheckinId, meditation_seconds: seconds })
+    });
+  } catch(e) { /* fail quietly */ }
+}
+
+document.getElementById('medBegin').addEventListener('click', beginMed);
+document.getElementById('medEnd').addEventListener('click', endMed);
 
 document.getElementById('againBtn').addEventListener('click', () => location.reload());
 
