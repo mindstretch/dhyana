@@ -163,3 +163,32 @@ register. *Same feeling, different hour.*
 1. **The insight view** — the report as dark data-viz: state arc, most-named feelings, intensity line, minutes sat. This is the "agency" payoff and the biggest gap.
 2. **Enrich the emotion tags** — more words, zone-grouped with subtle color, "+ add your own."
 3. **Non-judgment micro-copy** — one line at check-in that signals every feeling is welcome.
+
+---
+
+## Emotional design — the principles, in our register
+
+Sources: Aarron Walter, *Designing for Emotion* (A Book Apart); Don Norman's model
+via *The Impact of Emotional Design in UX* (Shakoor).
+
+**The trap:** these sources lean on *playful* examples — mascots, jokey copy,
+cartoony corners (Wufoo, MailChimp's Freddie, Betabrand). Applied naively that
+would wreck Dhyana. **The principles are universal; the playfulness is not.** Our
+register is calm, serious, intimate, honest. So we pursue: **warmth through
+restraint, presence through voice, delight through being *seen* (not entertained),
+trust through honesty and craft.**
+
+| Principle | In Dhyana |
+|---|---|
+| **Hierarchy of needs** — functional → reliable → usable → *pleasurable*; delight only on a solid base | The check-in must work flawlessly and feel effortless *before* any flourish. Never add polish that breaks reliability. |
+| **Emotion ↔ memory** — positive moments build trust + forgiveness; the emotional imprint decides return | Each session's felt care compounds into whether he comes back. This *is* the retention mechanism. |
+| **Personality = a person, not a machine** | Ours is a *calm, honest guide* — never a mascot. The **voice** is the personality: present, spare, kind, never flattering. |
+| **Contrast + the limited processor** (Hick's Law): if everything yells, nothing is heard | Validates our restraint. One idea per screen; the orb glowing in darkness *is* Tumblr's high-contrast focus. Minimalism is emotional design, not austerity. |
+| **Aesthetics aren't frosting** — attractive reads as more usable, more trustworthy | The breathing orb, DM Serif, the gold — craft earns trust. Invest in it. |
+| **Visceral / behavioral / reflective** (Norman's 3 levels) | Visceral: the dark calm + orb. Behavioral: the effortless flow. **Reflective: "this helped me see myself"** — the insight view + the development story. Our deepest, most durable layer. |
+| **Delight, never manipulation** — surprise/delight build love; manipulating emotion is unethical | Delight = moments of *being seen* (the state resolving to you, the kind acknowledgment, "settled," welcome-back). Never guilt, streaks, or fake urgency. |
+| **Forgiveness** — design the rough edges kindly | A missed day is never shamed. Empty states name the next kind action. |
+| **The human hand** (Arts & Crafts) — craft feels good because someone cared | Built from *his own* knowledge and voice. The human hand is real; authenticity is the emotional design. |
+
+**The one line:** Walter designs *delight through play*. Dhyana designs **delight
+through being seen** — the same emotional bond, in a quieter, more honest key.
