@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
       if (!deviceId) return res.status(400).json({ error: 'device_id required' });
 
       const url = `${base}?device_id=eq.${encodeURIComponent(deviceId)}`
-        + `&order=created_at.desc&limit=20&select=id,state,reflection,reflection_data,created_at`;
+        + `&order=created_at.desc&limit=90&select=id,state,reflection,reflection_data,meditation_seconds,program_day,created_at`;
       const r = await fetch(url, { headers });
       if (!r.ok) { console.error('Supabase read error:', await r.text()); return res.status(500).json({ error: 'Read failed' }); }
       return res.status(200).json({ checkins: await r.json() });

@@ -376,6 +376,39 @@ body {
 .med-timer { font-family: 'DM Serif Display', serif; font-size: 46px; color: var(--text-1); font-variant-numeric: tabular-nums; }
 .p-med-done { font-size: 12px; color: var(--text-3); letter-spacing: 0.16em; text-transform: uppercase; text-align: center; }
 
+/* ── INSIGHT ────────────────────────────────────── */
+.insight-link {
+  background: transparent; border: none; color: var(--text-3);
+  font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.04em;
+  cursor: pointer; padding: 4px 8px; margin-top: -6px; margin-bottom: 10px; transition: color 0.2s;
+}
+.insight-link:hover { color: var(--text-2); }
+.screen.s-insight { justify-content: flex-start; }
+.in-wrap { width: 100%; max-width: 440px; margin: auto 0; padding: 8px 0 24px; }
+.in-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.in-mark { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 16px; color: var(--text-2); }
+.in-back { background: transparent; border: none; color: var(--text-3); font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.04em; cursor: pointer; padding: 4px 8px; transition: color 0.2s; }
+.in-back:hover { color: var(--text-1); }
+.in-sub { font-size: 12px; color: var(--text-3); letter-spacing: 0.02em; margin-bottom: 4px; }
+.in-empty { font-family: 'DM Serif Display', serif; font-style: italic; font-size: 18px; color: var(--text-2); text-align: center; padding: 64px 0; }
+.in-sec { margin-top: 26px; }
+.in-h { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-3); margin-bottom: 13px; }
+.in-dots { display: flex; flex-wrap: wrap; gap: 8px; }
+.in-dot { width: 13px; height: 13px; border-radius: 50%; }
+.in-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+.in-leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); }
+.in-legdot { width: 8px; height: 8px; border-radius: 50%; }
+.in-tagrow { display: flex; align-items: center; gap: 12px; margin-bottom: 11px; }
+.in-word { font-size: 13px; font-weight: 300; color: var(--text-2); width: 68px; flex-shrink: 0; }
+.in-bar { height: 6px; border-radius: 3px; }
+.in-count { font-size: 12px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.in-cards { display: flex; gap: 12px; }
+.in-card { flex: 1; background: rgba(255,255,255,0.03); border-radius: 14px; padding: 14px 16px; }
+.in-cardlabel { font-size: 11px; color: var(--text-3); margin-bottom: 6px; }
+.in-cardnum { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text-1); font-variant-numeric: tabular-nums; }
+.in-cardsub { font-size: 11px; color: var(--text-3); margin-top: 3px; }
+.in-foot { text-align: center; margin-top: 28px; font-family: 'DM Serif Display', serif; font-style: italic; font-size: 14px; color: var(--text-2); }
+
 /* practice card */
 .p-practice {
   border: 1px solid rgba(255,255,255,0.08);
@@ -575,6 +608,7 @@ body {
 <div class="screen s-checkin" id="screenCheckin">
   <div class="wordmark">Dhyana</div>
   <div class="welcome" id="welcome"></div>
+  <button class="insight-link" id="insightLink" type="button" style="display:none;">your check-ins →</button>
 
   <div class="orb-zone">
     <p class="prompt" id="prompt">Where are you<br><em>right now?</em></p>
@@ -678,6 +712,36 @@ body {
     <div class="p-why" id="pWhy"></div>
 
     <button class="p-again" id="againBtn">check in again</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: INSIGHT ══ -->
+<div class="screen s-insight hidden" id="screenInsight">
+  <div class="in-wrap">
+    <div class="in-top">
+      <span class="in-mark">Dhyana</span>
+      <button class="in-back" id="insightBack" type="button">done</button>
+    </div>
+    <div class="in-sub" id="inSub"></div>
+
+    <div class="in-empty" id="inEmpty" style="display:none;">Your first check-in starts the picture.</div>
+
+    <div id="inContent">
+      <div class="in-sec">
+        <div class="in-h">how your days landed</div>
+        <div class="in-dots" id="inDots"></div>
+        <div class="in-legend" id="inLegend"></div>
+      </div>
+      <div class="in-sec">
+        <div class="in-h">most named</div>
+        <div id="inTags"></div>
+      </div>
+      <div class="in-sec in-cards">
+        <div class="in-card"><div class="in-cardlabel">Avg intensity</div><div class="in-cardnum" id="inIntensity">—</div><div class="in-cardsub" id="inIntensitySub"></div></div>
+        <div class="in-card"><div class="in-cardlabel">Time sat</div><div class="in-cardnum" id="inSat">—</div><div class="in-cardsub" id="inSatSub"></div></div>
+      </div>
+      <div class="in-foot iw-serif">seen, not scored</div>
+    </div>
   </div>
 </div>
 
@@ -1089,6 +1153,7 @@ async function loadWelcome() {
     if (!r.ok) return;
     const list = (await r.json()).checkins || [];
     if (!list.length) return;
+    document.getElementById('insightLink').style.display = 'inline-block';
     const last = list[0];
     const s = STATES[last.state];
     const el = document.getElementById('welcome');
@@ -1424,6 +1489,121 @@ async function saveMeditation(seconds) {
 
 document.getElementById('medBegin').addEventListener('click', beginMed);
 document.getElementById('medEnd').addEventListener('click', endMed);
+
+/* ── INSIGHT VIEW (reads real check-in history) ── */
+const TAG_COLOR = {};
+EMOTION_TAGS.forEach((t, i) => {
+  TAG_COLOR[t] = i < 6 ? '#C96B5A' : i < 12 ? '#5A6E8A' : i < 17 ? '#6FA89A' : '#E8A855';
+});
+
+function fmtDuration(s) {
+  const m = Math.round(s / 60);
+  if (m < 1) return '0m';
+  if (m < 60) return m + 'm';
+  const h = Math.floor(m / 60), mm = m % 60;
+  return h + 'h' + (mm ? ' ' + mm + 'm' : '');
+}
+
+function renderInsight(list) {
+  const content = document.getElementById('inContent');
+  const empty = document.getElementById('inEmpty');
+  const sub = document.getElementById('inSub');
+  if (!list.length) {
+    content.style.display = 'none';
+    empty.style.display = 'block';
+    sub.textContent = '';
+    return;
+  }
+  content.style.display = 'block';
+  empty.style.display = 'none';
+
+  const chrono = list.slice().reverse();
+  const days = new Set(list.map(c => (c.created_at || '').slice(0, 10))).size;
+  sub.textContent = list.length + ' check-in' + (list.length === 1 ? '' : 's') + ' · ' + days + ' day' + (days === 1 ? '' : 's');
+
+  const dotsEl = document.getElementById('inDots');
+  dotsEl.innerHTML = '';
+  chrono.slice(-21).forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'in-dot';
+    const s = STATES[c.state];
+    d.style.background = s ? s.color : 'rgba(255,255,255,0.2)';
+    dotsEl.appendChild(d);
+  });
+  const legEl = document.getElementById('inLegend');
+  legEl.innerHTML = '';
+  [['restful','restful'],['regulated','regulated'],['activated','activated'],['depleted','depleted'],['dysreg','scattered']].forEach(([k,label]) => {
+    const g = document.createElement('span'); g.className = 'in-leg';
+    g.innerHTML = '<span class="in-legdot" style="background:' + STATES[k].color + '"></span>' + label;
+    legEl.appendChild(g);
+  });
+
+  const counts = {};
+  list.forEach(c => {
+    const f = c.reflection_data && c.reflection_data.fields && c.reflection_data.fields.feelings;
+    if (Array.isArray(f)) f.forEach(t => { counts[t] = (counts[t] || 0) + 1; });
+  });
+  const top = Object.entries(counts).sort((a,b) => b[1]-a[1]).slice(0, 6);
+  const tagsEl = document.getElementById('inTags');
+  tagsEl.innerHTML = '';
+  if (!top.length) {
+    tagsEl.innerHTML = '<div style="font-size:13px;font-weight:300;color:var(--text-3)">Name a feeling on a name-&-rate day and it shows here.</div>';
+  } else {
+    const max = top[0][1];
+    top.forEach(([word, n]) => {
+      const row = document.createElement('div'); row.className = 'in-tagrow';
+      const w = document.createElement('span'); w.className = 'in-word'; w.textContent = word;
+      const bar = document.createElement('div'); bar.className = 'in-bar';
+      bar.style.width = Math.round((n / max) * 120) + 'px';
+      bar.style.background = TAG_COLOR[word] || 'rgba(255,255,255,0.25)';
+      const cnt = document.createElement('span'); cnt.className = 'in-count'; cnt.textContent = n;
+      row.appendChild(w); row.appendChild(bar); row.appendChild(cnt);
+      tagsEl.appendChild(row);
+    });
+  }
+
+  const ints = chrono.map(c => c.reflection_data && c.reflection_data.fields && c.reflection_data.fields.intensity)
+    .filter(v => typeof v === 'number');
+  const inEl = document.getElementById('inIntensity');
+  const inSubEl = document.getElementById('inIntensitySub');
+  if (ints.length) {
+    inEl.textContent = (ints.reduce((a,b)=>a+b,0) / ints.length).toFixed(1);
+    if (ints.length >= 4) {
+      const half = Math.floor(ints.length/2);
+      const firstAvg = ints.slice(0,half).reduce((a,b)=>a+b,0)/half;
+      const lastAvg = ints.slice(half).reduce((a,b)=>a+b,0)/(ints.length-half);
+      const diff = lastAvg - firstAvg;
+      inSubEl.textContent = Math.abs(diff) < 0.3 ? 'steady' : (diff < 0 ? 'easing' : 'rising');
+    } else { inSubEl.textContent = ints.length + ' rated'; }
+  } else { inEl.textContent = '—'; inSubEl.textContent = 'not rated yet'; }
+
+  const medSecs = list.reduce((a,c) => a + (c.meditation_seconds || 0), 0);
+  const sits = list.filter(c => (c.meditation_seconds || 0) > 0).length;
+  document.getElementById('inSat').textContent = medSecs ? fmtDuration(medSecs) : '—';
+  document.getElementById('inSatSub').textContent = sits ? (sits + ' sit' + (sits===1?'':'s')) : 'no sits yet';
+}
+
+async function openInsight() {
+  let list = [];
+  try {
+    const r = await fetch('/api/checkin?device_id=' + encodeURIComponent(DEVICE_ID));
+    if (r.ok) list = (await r.json()).checkins || [];
+  } catch(e) {}
+  renderInsight(list);
+  screenCheckin.classList.add('hidden');
+  screenProtocol.classList.add('hidden');
+  document.getElementById('screenInsight').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('insightLink').addEventListener('click', openInsight);
+document.getElementById('insightBack').addEventListener('click', () => {
+  document.getElementById('screenInsight').classList.add('hidden');
+  screenCheckin.classList.remove('hidden');
+  window.scrollTo(0, 0);
+});
+
+if (new URLSearchParams(location.search).get('view') === 'insight') openInsight();
 
 document.getElementById('againBtn').addEventListener('click', () => location.reload());
 
