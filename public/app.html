@@ -721,6 +721,30 @@ body {
   </div>
 </div>
 
+<!-- ══ GATE: settle first (hard states only) ══ -->
+<div class="screen s-protocol hidden" id="screenGate">
+  <div class="p-wrap">
+    <div class="p-chip"><span class="p-dot" id="gateDot"></span><span id="gateState"></span></div>
+    <div class="p-eyebrow" id="gateEyebrow"></div>
+    <h1 class="p-title" id="gateTitle"></h1>
+    <p class="p-body" id="gateBody"></p>
+    <div class="p-med" style="border-top:none;padding-top:0;">
+      <div class="p-med-idle" id="gateIdle">
+        <div class="med-durs" id="gateDurs"></div>
+        <button class="med-begin" id="gateBegin" type="button">Begin</button>
+      </div>
+      <div class="p-med-run" id="gateRun" style="display:none;">
+        <div class="med-timer" id="gateTimer">5:00</div>
+        <div class="timer-track"><div class="timer-fill" id="gateFill"></div></div>
+        <button class="timer-end" id="gateEnd" type="button">End</button>
+      </div>
+      <div class="p-med-done" id="gateDone" style="display:none;">· settled ·</div>
+    </div>
+    <button class="continue-btn" id="gateContinue" type="button" style="display:none;margin-top:20px;">Today's practice <span>→</span></button>
+    <button class="p-again" id="gateSkip" type="button">skip to today's practice</button>
+  </div>
+</div>
+
 <!-- ══ SCREEN 3: INSIGHT ══ -->
 <div class="screen s-insight hidden" id="screenInsight">
   <div class="in-wrap">
@@ -1172,7 +1196,7 @@ async function loadWelcome() {
 }
 loadWelcome();
 
-document.getElementById('continueBtn').addEventListener('click', goToDayPractice);
+document.getElementById('continueBtn').addEventListener('click', onContinue);
 
 function goToProtocol() {
   const p = PROTOCOLS[currentState];
@@ -1272,6 +1296,7 @@ function goToDayPractice() {
 
   saveCheckin(currentState, dayNum);
 
+  document.getElementById('screenGate').classList.add('hidden');
   screenCheckin.classList.add('hidden');
   screenProtocol.classList.remove('hidden');
   window.scrollTo(0, 0);
@@ -1457,6 +1482,7 @@ function revealMeditation() {
   document.getElementById('medIdle').style.display = 'flex';
   document.getElementById('medRun').style.display = 'none';
   document.getElementById('medDone').style.display = 'none';
+  medMin = MED_DEFAULT[currentState] || 10;   // depleted/restful default longer; hot states shorter
   selectMedDur(medMin);
 }
 
@@ -1497,6 +1523,79 @@ async function saveMeditation(seconds) {
 
 document.getElementById('medBegin').addEventListener('click', beginMed);
 document.getElementById('medEnd').addEventListener('click', endMed);
+
+/* ── HYBRID: the orb gates hard states + tunes the closing sit ── */
+const GATE = {
+  activated: { eyebrow: 'Downshift', title: 'Settle before the practice', body: "You're running hot. A few quiet minutes first — the practice lands better from a steadier place.", mins: [3, 5], def: 5 },
+  depleted:  { eyebrow: 'Restore',   title: 'Rest before the practice',   body: "You're running on empty. Let the system settle for a few minutes before today's practice — no forcing.", mins: [3, 5], def: 5 },
+  dysreg:    { eyebrow: 'Reset',     title: 'Reset before the practice',  body: "You're scattered. A short pause to let things settle, then today's practice.", mins: [3, 5], def: 3 },
+};
+const MED_DEFAULT = { depleted: 10, activated: 5, dysreg: 5, regulated: 5, restful: 10 };
+
+let gateMin = 5, gateInt = null, gateRem = 0, gateTot = 0;
+
+function buildGateDurs(g) {
+  const wrap = document.getElementById('gateDurs');
+  wrap.innerHTML = '';
+  g.mins.forEach(m => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'med-dur'; b.dataset.min = m; b.textContent = m;
+    b.addEventListener('click', () => selectGateDur(m));
+    wrap.appendChild(b);
+  });
+  const unit = document.createElement('span'); unit.className = 'med-unit'; unit.textContent = 'min';
+  wrap.appendChild(unit);
+  selectGateDur(g.def);
+}
+function selectGateDur(min) {
+  gateMin = min;
+  document.querySelectorAll('#gateDurs .med-dur').forEach(b => b.classList.toggle('selected', Number(b.dataset.min) === min));
+  document.getElementById('gateTimer').textContent = fmt(min * 60);
+}
+function showGate() {
+  const g = GATE[currentState], s = STATES[currentState];
+  document.getElementById('gateDot').style.background = s.color;
+  document.getElementById('gateState').textContent = s.name;
+  document.getElementById('gateEyebrow').textContent = g.eyebrow;
+  document.getElementById('gateTitle').textContent = g.title;
+  document.getElementById('gateBody').textContent = g.body;
+  document.getElementById('gateIdle').style.display = 'flex';
+  document.getElementById('gateRun').style.display = 'none';
+  document.getElementById('gateDone').style.display = 'none';
+  document.getElementById('gateContinue').style.display = 'none';
+  document.getElementById('gateFill').style.width = '0%';
+  buildGateDurs(g);
+  screenCheckin.classList.add('hidden');
+  document.getElementById('screenGate').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+function beginGate() {
+  document.getElementById('gateIdle').style.display = 'none';
+  document.getElementById('gateRun').style.display = 'flex';
+  gateTot = gateMin * 60; gateRem = gateTot;
+  document.getElementById('gateTimer').textContent = fmt(gateRem);
+  document.getElementById('gateFill').style.width = '0%';
+  gateInt = setInterval(() => {
+    gateRem -= 1;
+    document.getElementById('gateTimer').textContent = fmt(Math.max(0, gateRem));
+    document.getElementById('gateFill').style.width = Math.min(100, ((gateTot - gateRem) / gateTot) * 100) + '%';
+    if (gateRem <= 0) endGate();
+  }, 1000);
+}
+function endGate() {
+  if (gateInt) { clearInterval(gateInt); gateInt = null; }
+  document.getElementById('gateRun').style.display = 'none';
+  document.getElementById('gateDone').style.display = 'block';
+  document.getElementById('gateContinue').style.display = 'inline-flex';
+}
+function onContinue() {
+  if (GATE[currentState]) showGate();
+  else goToDayPractice();
+}
+document.getElementById('gateBegin').addEventListener('click', beginGate);
+document.getElementById('gateEnd').addEventListener('click', endGate);
+document.getElementById('gateContinue').addEventListener('click', goToDayPractice);
+document.getElementById('gateSkip').addEventListener('click', goToDayPractice);
 
 /* ── INSIGHT VIEW (reads real check-in history) ── */
 const TAG_COLOR = {};
