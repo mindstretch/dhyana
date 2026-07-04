@@ -1,0 +1,16 @@
+{
+  "name": "Dhyana",
+  "short_name": "Dhyana",
+  "description": "A daily nervous-system check-in that becomes a picture of you.",
+  "start_url": "/app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E1219",
+  "theme_color": "#0E1219",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

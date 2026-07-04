@@ -1,0 +1,9 @@
+{
+  "appId": "com.mindstretchlabs.dhyana",
+  "appName": "Dhyana",
+  "webDir": "native/www",
+  "ios": {
+    "contentInset": "always",
+    "backgroundColor": "#0E1219"
+  }
+}

@@ -6,6 +6,12 @@
 <title>Dhyana</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0E1219">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Dhyana">
+<link rel="apple-touch-icon" href="/icon-180.png">
 <style>
 :root {
   --bg: #0E1219;
@@ -1109,12 +1115,14 @@ function getDeviceId() {
   return id;
 }
 const DEVICE_ID = getDeviceId();
+// '' on web (relative). The native app bundle injects an absolute origin.
+const API_BASE = window.DHYANA_API_BASE || '';
 let currentCheckinId = null;
 
 async function saveCheckin(state, day) {
   currentCheckinId = null;
   try {
-    const r = await fetch('/api/checkin', {
+    const r = await fetch(API_BASE + '/api/checkin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ device_id: DEVICE_ID, state, program_day: day || null })
@@ -1126,7 +1134,7 @@ async function saveCheckin(state, day) {
 async function saveReflection(text) {
   if (!currentCheckinId || !text) return;
   try {
-    await fetch('/api/checkin', {
+    await fetch(API_BASE + '/api/checkin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: currentCheckinId, reflection: text })
@@ -1149,7 +1157,7 @@ function relTime(iso) {
 
 async function loadWelcome() {
   try {
-    const r = await fetch('/api/checkin?device_id=' + encodeURIComponent(DEVICE_ID));
+    const r = await fetch(API_BASE + '/api/checkin?device_id=' + encodeURIComponent(DEVICE_ID));
     if (!r.ok) return;
     const list = (await r.json()).checkins || [];
     if (!list.length) return;
@@ -1392,7 +1400,7 @@ function buildStructured(cfg) {
 async function saveStructured(data, text) {
   if (!currentCheckinId) return;
   try {
-    await fetch('/api/checkin', {
+    await fetch(API_BASE + '/api/checkin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: currentCheckinId, reflection: text, reflection_data: data })
@@ -1479,7 +1487,7 @@ function endMed() {
 async function saveMeditation(seconds) {
   if (!currentCheckinId || !seconds) return;
   try {
-    await fetch('/api/checkin', {
+    await fetch(API_BASE + '/api/checkin', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: currentCheckinId, meditation_seconds: seconds })
@@ -1586,7 +1594,7 @@ function renderInsight(list) {
 async function openInsight() {
   let list = [];
   try {
-    const r = await fetch('/api/checkin?device_id=' + encodeURIComponent(DEVICE_ID));
+    const r = await fetch(API_BASE + '/api/checkin?device_id=' + encodeURIComponent(DEVICE_ID));
     if (r.ok) list = (await r.json()).checkins || [];
   } catch(e) {}
   renderInsight(list);
@@ -1604,6 +1612,11 @@ document.getElementById('insightBack').addEventListener('click', () => {
 });
 
 if (new URLSearchParams(location.search).get('view') === 'insight') openInsight();
+
+/* PWA — register the service worker (installable, offline-tolerant) */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
 
 document.getElementById('againBtn').addEventListener('click', () => location.reload());
 
