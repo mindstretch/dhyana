@@ -83,8 +83,10 @@ params at build.
 
 ---
 
-## Open questions for you
-1. **Voice** — how warm vs. how spare? (I'll draft two sample paragraphs to pick from.)
-2. **Quoting** — how much of your own reflections read back to you? (none / sparing / generous)
-3. **Push vs pull** — auto-generate at day 30, or only when you tap "reflect"?
-4. **Weekly scope** — is the 4-element weekly right, or lighter/heavier?
+## Decisions (locked)
+- **Voice:** warmer — warm and human, still honest and spare; never flattering or clinical.
+- **Quoting:** sparing — reflect your words back lightly, a phrase here and there.
+- **Trigger:** on tap — you tap "reflect"; no auto-generation (revisit later).
+- **Weekly:** the 4-element version (through-line · arc · one pattern · one question).
+
+See sample output in [report-sample.md](report-sample.md).
