@@ -879,7 +879,7 @@ const PROGRAM = [
     category: 'Emotional awareness',
     intention: 'Name and rate what you feel',
     framing: "Start by getting specific about what's actually here — not the vague “fine,” the real thing.",
-    science: "Putting a feeling into words and rating its intensity engages the brain's regulatory systems and measurably lowers its charge — “name it to tame it.” Naming precisely is itself a form of regulation.",
+    science: "Name it to tame it — labeling a feeling measurably lowers its charge.",
     scienceTag: 'strong',
     source: { title: 'Putting Feelings Into Words — Lieberman et al., 2007', url: 'https://sanlab.psych.ucla.edu/wp-content/uploads/sites/31/2015/05/Lieberman_AL-2007.pdf' },
     hints: [
@@ -900,7 +900,7 @@ const PROGRAM = [
     category: 'Well-being',
     intention: 'Savor one ordinary pleasure',
     framing: 'Pick one small good thing today and give it your full attention while it lasts.',
-    science: 'Deliberately attending to a good moment — instead of rushing past it — measurably extends the positive feeling and builds it into memory. Savoring is trainable, and it compounds.',
+    science: 'Lingering on a good moment makes it last — and savoring is trainable.',
     scienceTag: 'moderate',
     source: { title: 'Research on savoring — PMC / NIH', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8712667/' },
     hints: [
@@ -919,7 +919,7 @@ const PROGRAM = [
     category: 'Consciousness',
     intention: 'Where did life expand today?',
     framing: 'Look back for a moment you felt more alive, more open, more yourself — not less.',
-    science: "In this tradition the natural direction of life is toward greater fullness — the “expansion of happiness.” Noticing where that actually happened trains attention toward it. A contemplative lineage, not a clinical claim.",
+    science: "In this tradition, life leans toward fullness — noticing where it happened trains your attention there.",
     scienceTag: 'traditional',
     hints: [
       'Recall a moment today you felt more open or alive.',
@@ -937,7 +937,7 @@ const PROGRAM = [
     category: 'Resilience',
     intention: 'Name the story, then question it',
     framing: "When something stung today, catch the story you told about it — and check if it's the whole truth.",
-    science: 'Reappraisal — catching an automatic interpretation and testing it — is one of the most robust tools in cognitive therapy for changing how an event lands. The thought is not the fact.',
+    science: 'Catch the story and test it — the thought is not the fact.',
     scienceTag: 'strong',
     source: { title: 'Cognitive reappraisal — review (PMC / NIH)', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10149752/' },
     hints: [
@@ -957,7 +957,7 @@ const PROGRAM = [
     category: 'Relationship',
     intention: 'Appreciate one person — and tell them',
     framing: "Bring one person to mind you're grateful for. Then actually say it to them.",
-    science: 'Expressed gratitude — not just felt — reliably strengthens relationships and lifts both people. The telling is the active ingredient; keeping it inside does much less.',
+    science: 'Said out loud, gratitude lifts both people — the telling is the active part.',
     scienceTag: 'strong',
     source: { title: 'Expressing gratitude, RCT — PMC / NIH', url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC10104980/' },
     hints: [
@@ -1254,9 +1254,7 @@ function goToDayPractice() {
   document.getElementById('pEyebrow').textContent = day.category || '';
   document.getElementById('pTitle').textContent = day.intention || '';
 
-  const bodyEl = document.getElementById('pBody');
-  if (day.framing) { bodyEl.textContent = day.framing; bodyEl.style.display = ''; }
-  else { bodyEl.style.display = 'none'; }
+  document.getElementById('pBody').style.display = 'none';   // spare: no framing line
 
   const sci = document.getElementById('pScience');
   if (day.science) {
@@ -1273,17 +1271,7 @@ function goToDayPractice() {
 
   document.getElementById('pMeditation').style.display = 'none';
 
-  const hintsEl = document.getElementById('pHints');
-  hintsEl.innerHTML = '';
-  if (day.hints && day.hints.length) {
-    for (const h of day.hints) {
-      const el = document.createElement('div');
-      el.className = 'p-hint';
-      el.textContent = h;
-      hintsEl.appendChild(el);
-    }
-    hintsEl.style.display = 'flex';
-  } else { hintsEl.style.display = 'none'; }
+  document.getElementById('pHints').style.display = 'none';  // spare: no hints list
 
   // program days have no timer; reflection is the practice
   document.getElementById('pPractice').style.display = 'none';
